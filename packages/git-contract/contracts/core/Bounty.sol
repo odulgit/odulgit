@@ -3,6 +3,7 @@ pragma solidity ^0.8.0;
 
 contract Bounty {
     uint256 public bountyCount = 0;
+    uint public bountyTotalAmount = 0;
     mapping(uint256 => address) public bountyOwner;
     mapping(uint256 => uint256) public bountyAmount;
     mapping(uint256 => BountyContent) public bountyContent;
@@ -39,6 +40,7 @@ contract Bounty {
         bountyAmount[bountyCount] = msg.value;
         bountyContent[bountyCount] = BountyContent(title, description, 1);
         bountyCount++;
+        bountyTotalAmount += bountyAmount[bountyCount];
         emit createBountyEvent(
             bountyCount,
             msg.sender,
