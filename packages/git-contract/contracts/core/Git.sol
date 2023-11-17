@@ -8,7 +8,6 @@ contract Git is Bounty {
     //  === public storage ===
     address public factory;
     address public codeOwner;
-    bytes20 public latestCommit;
     // @TODO: name of the repo
     // @TODO: description of the repo (can edit)
     // @TODO: issue count
@@ -19,6 +18,7 @@ contract Git is Bounty {
     mapping(bytes20 => string) public cid;
     mapping(address => uint256) public contributeCount;
     mapping(address => mapping(uint256 => Bundle)) public contributer;
+    mapping(address => mapping(uint256 => Request)) public contributorRequest;
     mapping(bytes20 => bool) public mainCommitExist;
     // === event ===
     event test(
@@ -63,6 +63,7 @@ contract Git is Bounty {
         address codeOwner;
         bytes20 latestCommit;
         string name;
+        string description;
         string defaultBranch;
     }
     // commit struct for git
@@ -77,9 +78,9 @@ contract Git is Bounty {
     // @TODO Brnach Name
     struct Request {
         address contributer;
+        uint256 contributeId;
         uint256 linkBounty;
         bytes20 commitHash;
-        string bundleUrl;
     }
 
     struct Bundle {
@@ -109,7 +110,7 @@ contract Git is Bounty {
     }
 
     // API 2 : reward request
-    function rewardRequest(uint256 bountyId, string memory bundleUrl) public {
+    function rewardRequest(uint256 contributeId, uint256 bountyId) public {
         require(
             bountyContent[bountyId].openStatus == 1,
             "bounty is closed or not exist"
@@ -117,17 +118,17 @@ contract Git is Bounty {
 
         require(
             contributer[msg.sender][contributeCount[msg.sender] - 1].sha ==
-                latestCommit,
+                repo.latestCommit,
             "need to contribute to this repo branch"
         );
-        uint256 count = contributeCount[msg.sender];
 
         Request memory request = Request(
             msg.sender,
+            contributeId,
             bountyId,
-            contributer[msg.sender][count].sha,
-            bundleUrl
+            contributer[msg.sender][contributeId].sha
         );
+        contributorRequest[msg.sender][contributeId] = request;
         requests[requestCount] = request;
         requestCount++;
     }
@@ -136,13 +137,34 @@ contract Git is Bounty {
     // @param commit: commit struct
     // @param newHash: bytes20 sha1 hash of the new commit
     // @param parent: bytes20 sha1 hash of the parent commit
-    function merge(Commit memory commit) public onlyCodeOwner {
+    function merge(
+        Commit memory commit,
+        address _contributer,
+        uint256 contributeId,
+        string memory _cid
+    ) public onlyCodeOwner {
         require(
             commit.thisHash == verifyCommit(commit),
             "need to parent to this branch"
         );
-        latestCommit = commit.thisHash;
+        require(
+            commit.parents[0] == repo.latestCommit,
+            "need merge to main branch"
+        );
+        require(
+            commit.parents[1] == contributer[_contributer][contributeId].sha,
+            "contuber is not same to commit parent"
+        );
+        repo.latestCommit = commit.thisHash;
         mainCommitExist[commit.thisHash] = true;
+        cid[commit.thisHash] = _cid;
+
+        if (contributorRequest[_contributer][contributeId].linkBounty != 0) {
+            giveBounty(
+                contributorRequest[_contributer][contributeId].linkBounty,
+                _contributer
+            );
+        }
     }
 
     // API 4 : push commit to repo
@@ -169,6 +191,11 @@ contract Git is Bounty {
         contributer[msg.sender][count] = bundle;
         contributeCount[msg.sender] = count + 1;
         emit contribute(msg.sender, count, bundle);
+    }
+
+    // API 5 : set repo description
+    function setDescription(string memory _description) public onlyCodeOwner {
+        repo.description = _description;
     }
 
     // === internal ===
@@ -215,7 +242,7 @@ contract Git is Bounty {
 
     // === view ===
     function getLatestPack() public view returns (bytes20) {
-        return latestCommit;
+        return repo.latestCommit;
     }
 
     function getRepoContent() public view returns (Repo memory) {
