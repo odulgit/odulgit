@@ -1,4 +1,4 @@
-import { BellRing, Check } from "lucide-react"
+import { BellRing, Check, Container } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
@@ -19,7 +19,7 @@ type TopBountyCardProps = React.ComponentProps<typeof Card> & {
 
 export function TopBountyCard({ className, ...props }: TopBountyCardProps) {
     return (
-        <Card className={cn("w-[328px]", className)} {...props}>
+        <Card className={cn("w-[328px] bg-gray-600 bg-opacity-90 border-gray-700 border", className)} {...props}>
             <CardHeader className="p-6 pb-1">
                 <div>{props.bounty}</div>
                 <CardTitle>

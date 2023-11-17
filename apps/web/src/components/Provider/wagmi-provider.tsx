@@ -23,7 +23,7 @@ const config = createConfig(
         // Required API Keys
         chains: chains,
         // Required
-        appName: "Tobi",
+        appName: "Odulgit",
         publicClient,
         webSocketPublicClient,
     }),
