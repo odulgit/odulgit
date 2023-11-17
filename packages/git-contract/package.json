@@ -16,6 +16,7 @@
     "@nomiclabs/hardhat-ethers": "2.2.3",
     "@nomiclabs/hardhat-etherscan": "3.1.7",
     "dotenv": "16.3.1",
+    "eslint-config-custom": "workspace:*",
     "ethers": "^5.0.0",
     "hardhat": "2.18.1",
     "ts-node": "^10.9.1",
