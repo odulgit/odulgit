@@ -4,11 +4,32 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "ipfs": "sh ./scripts/ipfs/start.sh"
+    "ipfs": "sh ./scripts/ipfs/start.sh",
+    "deploy:test": "hardhat deploy --network calibration",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "dependencies": {},
-  "devDependencies": {}
+  "dependencies": {
+    "@ensdomains/buffer": "0.1.1",
+    "@lighthouse-web3/sdk": "0.2.8",
+    "@zondax/filecoin-solidity": "4.0.3",
+    "cids": "1.1.9",
+    "ethers": "5.7.2",
+    "ipfs-car": "1.0.0",
+    "solidity-cborutils": "2.0.0"
+  },
+  "devDependencies": {
+    "@nomiclabs/hardhat-ethers": "2.2.3",
+    "@types/node": "20.9.0",
+    "@zondax/solidity-bignumber": "0.1.0",
+    "dotenv": "16.3.1",
+    "eslint-config-custom": "workspace:*",
+    "hardhat": "2.18.1",
+    "hardhat-deploy": "^0.9.29",
+    "ts-node": "^10.9.1",
+    "tsconfig": "workspace:*",
+    "typescript": "5.2.2"
+  }
 }
