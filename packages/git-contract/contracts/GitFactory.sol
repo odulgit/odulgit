@@ -11,10 +11,12 @@ contract GitFactory {
     // @param cid: string of the first commit cid
     function getRepoAddress(
         bytes20 commitHash,
-        string memory cid
+        string memory name,
+        string memory cid,
+        string memory defaultBranch
     ) public returns (address) {
         Git git = new Git();
-        git.initialize(msg.sender, commitHash, cid);
+        git.initialize(msg.sender, commitHash, name, cid, defaultBranch);
         repos[repoCount] = address(git);
         repoCount++;
 

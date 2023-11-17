@@ -3,27 +3,40 @@ pragma solidity ^0.8.0;
 
 import {SHA1} from "../libraries/SHA1.sol";
 import {Bounty} from "./Bounty.sol";
-import {Bounty} from "./Bounty.sol";
 
-contract Git is Bounty {
 contract Git is Bounty {
     //  === public storage ===
     address public factory;
-    address public codeOwner;
-    bytes20 public latestCommit;
     // @TODO: name of the repo
     // @TODO: description of the repo (can edit)
     // @TODO: issue count
     // @TODO: issue content
+    Repo public repo;
     uint256 public requestCount = 0;
     mapping(uint256 => Request) public requests;
     mapping(bytes20 => string) public cid;
     mapping(address => uint256) public contributeCount;
-    mapping(address => mapping(uint256 => bytes20)) public contributer;
+    mapping(address => mapping(uint256 => Bundle)) public contributer;
+    mapping(address => mapping(uint256 => Request)) public contributorRequest;
+    mapping(bytes20 => bool) public mainCommitExist;
     // === event ===
-    event test(bytes20 indexed sha, string msg);
-    event contribute(address indexed contributer, bytes20 indexed sha);
-    event merged(address indexed contributer, bytes20 indexed sha);
+    event test(
+        bytes20 indexed sha,
+        Commit commit,
+        bytes wc,
+        bytes t,
+        bytes parent,
+        bytes message,
+        bytes data,
+        string msg
+    );
+
+    event contribute(
+        address indexed contributer,
+        uint256 indexed contributeID,
+        Bundle bundle
+    );
+    event merged(address indexed contributer, Bundle indexed bundle);
 
     // === constructor ===
     constructor() payable {
@@ -32,37 +45,46 @@ contract Git is Bounty {
 
     // === modifier ===
     modifier onlyCodeOwner() {
-        require(msg.sender == codeOwner, "forbidden");
+        require(msg.sender == repo.codeOwner, "forbidden");
         _;
     }
 
     modifier onlyIssuerOrCodeOwner(address _issuer) {
         require(
-            msg.sender == _issuer || msg.sender == codeOwner,
+            msg.sender == _issuer || msg.sender == repo.codeOwner,
             "only issuer or code owner"
         );
         _;
     }
 
     // === struct ===
+    struct Repo {
+        address codeOwner;
+        bytes20 latestCommit;
+        string name;
+        string description;
+        string defaultBranch;
+    }
     // commit struct for git
     struct Commit {
-        bytes20 newHash; // sha1 hash of the commit
-        bytes commit; // commit with word count
-        bytes tree; // tree + sha
-        bytes message; // left message or gpg sign
+        bytes20 thisHash; // sha1 hash of the commit
+        bytes wordCount; // commit with word count
+        bytes20 tree; // sha1 of tree
+        bytes20[] parents; // sha
+        bytes message; // incloud author, commitor, and commit message
     }
 
     // @TODO Brnach Name
     struct Request {
         address contributer;
+        uint256 contributeId;
         uint256 linkBounty;
         bytes20 commitHash;
-        string bundleUrl;
-        address contributer;
-        uint256 linkBounty;
-        bytes20 commitHash;
-        string bundleUrl;
+    }
+
+    struct Bundle {
+        string cid;
+        bytes20 sha;
     }
 
     // API 1 : initialize repo (first commit)
@@ -72,37 +94,40 @@ contract Git is Bounty {
     function initialize(
         address _codeOwner,
         bytes20 _commitHash,
-        string memory _cid
+        string memory _name,
+        string memory _cid,
+        string memory _defaultBranch
     ) external {
         require(msg.sender == factory, "forbidden");
-        codeOwner = _codeOwner;
-        latestCommit = _commitHash;
+        repo.codeOwner = _codeOwner;
+        repo.latestCommit = _commitHash;
+        repo.name = _name;
+        repo.defaultBranch = _defaultBranch;
 
         cid[_commitHash] = _cid;
+        mainCommitExist[_commitHash] = true;
     }
 
     // API 2 : reward request
-    function rewardRequest(uint256 bountyId, string memory bundleUrl) public {
+    function rewardRequest(uint256 contributeId, uint256 bountyId) public {
         require(
-            bountyContent[bountyId].openStatus == 1,
-            "bounty is closed or not exist"
             bountyContent[bountyId].openStatus == 1,
             "bounty is closed or not exist"
         );
 
         require(
-            contributer[msg.sender][contributeCount[msg.sender] - 1] ==
-                latestCommit,
+            contributer[msg.sender][contributeCount[msg.sender] - 1].sha ==
+                repo.latestCommit,
             "need to contribute to this repo branch"
         );
-        uint256 count = contributeCount[msg.sender];
 
         Request memory request = Request(
             msg.sender,
+            contributeId,
             bountyId,
-            contributer[msg.sender][count],
-            bundleUrl
+            contributer[msg.sender][contributeId].sha
         );
+        contributorRequest[msg.sender][contributeId] = request;
         requests[requestCount] = request;
         requestCount++;
     }
@@ -113,93 +138,126 @@ contract Git is Bounty {
     // @param parent: bytes20 sha1 hash of the parent commit
     function merge(
         Commit memory commit,
-        bytes20 commitParent
+        address _contributer,
+        uint256 contributeId,
+        string memory _cid
     ) public onlyCodeOwner {
         require(
-            commit.newHash == verifyMergeParent(commit, commitParent),
+            commit.thisHash == verifyCommit(commit),
             "need to parent to this branch"
         );
-        latestCommit = commit.newHash;
-    }
-
-    function testpush(Commit memory commit) public {}
-
-    function push(Commit memory commit, string memory _cid) public {
         require(
-            commit.newHash == verifyCommitParent(commit),
-            "need to parent to this repo branch"
+            commit.parents[0] == repo.latestCommit,
+            "need merge to main branch"
         );
-        uint256 count = contributeCount[msg.sender];
-        contributer[msg.sender][count] = commit.newHash;
-        contributeCount[msg.sender] = count + 1;
-        emit contribute(msg.sender, commit.newHash);
-    }
-
-    function push(Commit memory commit, bytes20 newHash) internal {
         require(
-            newHash == verifyCommitParent(commit),
-            "need to parent to this repo branch"
+            commit.parents[1] == contributer[_contributer][contributeId].sha,
+            "contuber is not same to commit parent"
         );
-        uint256 count = contributeCount[msg.sender];
-        contributer[msg.sender][count] = newHash;
-        contributeCount[msg.sender] = count + 1;
-        emit contribute(msg.sender, newHash);
+        repo.latestCommit = commit.thisHash;
+        mainCommitExist[commit.thisHash] = true;
+        cid[commit.thisHash] = _cid;
+
+        if (contributorRequest[_contributer][contributeId].linkBounty != 0) {
+            giveBounty(
+                contributorRequest[_contributer][contributeId].linkBounty,
+                _contributer
+            );
+        }
     }
 
-    function multiCommitPush(
-        Commit[] memory commits,
-        string memory _cid
-    ) public {
+    // API 4 : push commit to repo
+    // @param commits: array of commit struct
+    // @param _cid: string of the commit cid
+    function push(Commit[] memory commits, string memory _cid) public {
+        require(
+            mainCommitExist[commits[0].parents[0]] == true,
+            "parent commit not exist"
+        );
         for (uint256 i = 0; i < commits.length; i++) {
             require(
-                commits[i].newHash == verifyCommitParent(commits[i]),
+                commits[i].thisHash == verifyCommit(commits[i]),
                 "need to parent to this repo branch"
             );
         }
+
+        Bundle memory bundle = Bundle(
+            _cid,
+            commits[commits.length - 1].thisHash
+        );
+
         uint256 count = contributeCount[msg.sender];
-        contributer[msg.sender][count] = commits[commits.length - 1].newHash;
+        contributer[msg.sender][count] = bundle;
         contributeCount[msg.sender] = count + 1;
-        emit contribute(msg.sender, commits[commits.length - 1].newHash);
+        emit contribute(msg.sender, count, bundle);
+    }
+
+    // API 5 : set repo description
+    function setDescription(string memory _description) public onlyCodeOwner {
+        repo.description = _description;
     }
 
     // === internal ===
     // verify contributor's commit
     // @param commit: commit struct
-    function verifyCommitParent(
-        Commit memory commit
-    ) internal returns (bytes20) {
+    function verifyCommit(Commit memory commit) internal returns (bytes20) {
+        bytes memory wordCount = abi.encodePacked(
+            bytes("commit "),
+            abi.encodePacked(commit.wordCount)
+        );
+        bytes memory tree = abi.encodePacked(
+            bytes("tree "),
+            bytes20ToHexStr((commit.tree)),
+            bytes("\n")
+        );
+
+        bytes memory parents = "";
+        for (uint256 i = 0; i < commit.parents.length; i++) {
+            parents = abi.encodePacked(
+                parents,
+                bytes("parent "),
+                bytes20ToHexStr(commit.parents[i]),
+                bytes("\n")
+            );
+        }
         bytes memory data = abi.encodePacked(
-            commit.commit,
-            commit.tree,
-            bytes("parent"),
-            latestCommit,
-            bytes("\n"),
+            wordCount,
+            tree,
+            parents,
             commit.message
         );
-        emit test(SHA1.sha1(data), "test");
-        return SHA1.sha1(data);
-    }
-
-    function verifyMergeParent(
-        Commit memory commit,
-        bytes20 parent
-    ) internal view returns (bytes20) {
-        bytes memory data = abi.encodePacked(
-            commit.commit,
-            commit.tree,
-            bytes("parent"),
-            latestCommit,
-            bytes("\n"),
-            bytes("parent"),
-            parent,
-            bytes("\n"),
-            commit.message
+        emit test(
+            SHA1.sha1(data),
+            commit,
+            wordCount,
+            tree,
+            parents,
+            commit.message,
+            data,
+            "test commit"
         );
         return SHA1.sha1(data);
     }
 
     // === view ===
     function getLatestPack() public view returns (bytes20) {
-        return latestCommit;
+        return repo.latestCommit;
+    }
+
+    function getRepoContent() public view returns (Repo memory) {
+        return repo;
+    }
+
+    function bytes20ToHexStr(
+        bytes20 _bytes
+    ) public pure returns (bytes memory) {
+        bytes memory alphabet = "0123456789abcdef";
+
+        bytes memory str = new bytes(40);
+        for (uint i = 0; i < 20; i++) {
+            str[i * 2] = alphabet[uint(uint8(_bytes[i] >> 4))];
+            str[1 + i * 2] = alphabet[uint(uint8(_bytes[i] & 0x0f))];
+        }
+        return abi.encodePacked(bytes(string(str)));
     }
 }
