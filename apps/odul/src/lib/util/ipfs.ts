@@ -1,4 +1,8 @@
 import fs from "node:fs"
+import { getConfig } from "../service/config"
+
+const config = getConfig()
+
 const getHelia = async () => {
   const { createHelia } = await import("helia")
   const { unixfs } = await import("@helia/unixfs")
@@ -37,7 +41,7 @@ const getHelia = async () => {
     peerDiscovery: [
       bootstrap({
         list: [
-          "/ip4/127.0.0.1/tcp/4001/p2p/12D3KooWEiengBkTjRwdCY9xjeU4WZVx7A5EihemNHuWHWuMP1yo",
+          `/ip4/${config.ipfs?.bootstrap?.host}/tcp/${config.ipfs?.bootstrap?.port || "4001"}/p2p/${config.ipfs?.bootstrap?.peerId}`,
         ],
       }),
     ],
@@ -59,7 +63,7 @@ const getHelia = async () => {
 export const uploadFile = async (data: Buffer): Promise<string> => {
   const kuboClient = await import("kubo-rpc-client")
 
-  const kubo = kuboClient.create({ host: "127.0.0.1" })
+  const kubo = kuboClient.create({ host: config.ipfs?.kubo?.host })
   const cid = (await kubo.add(data)).cid
   await kubo.pin.add(cid)
 
@@ -87,7 +91,7 @@ export const uploadDir = async (dir: string, hidden: boolean = false): Promise<s
   const parentDir = dir.substring(0, dir.lastIndexOf("/"))
   const thisDir = dir.substring(dir.lastIndexOf("/") + 1)
 
-  const kubo = kuboClient.create({ host: "127.0.0.1" })
+  const kubo = kuboClient.create({ host: config.ipfs?.kubo?.host })
 
   let cid = ""
   for await (const file of kubo.addAll(kuboClient.globSource(parentDir, `${thisDir}/**/*`, { hidden }))) {

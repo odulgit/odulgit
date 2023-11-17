@@ -1,0 +1,14 @@
+[ethereum]
+privateKey=
+networkUrl=
+contract=
+
+[walletConnect]
+projectId=
+
+[ipfs.bootstrap]
+peerId=
+host=
+
+[ipfs.kubo]
+host=
