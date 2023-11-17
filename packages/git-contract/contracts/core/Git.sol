@@ -7,7 +7,6 @@ import {Bounty} from "./Bounty.sol";
 contract Git is Bounty {
     //  === public storage ===
     address public factory;
-    address public codeOwner;
     // @TODO: name of the repo
     // @TODO: description of the repo (can edit)
     // @TODO: issue count
@@ -46,13 +45,13 @@ contract Git is Bounty {
 
     // === modifier ===
     modifier onlyCodeOwner() {
-        require(msg.sender == codeOwner, "forbidden");
+        require(msg.sender == repo.codeOwner, "forbidden");
         _;
     }
 
     modifier onlyIssuerOrCodeOwner(address _issuer) {
         require(
-            msg.sender == _issuer || msg.sender == codeOwner,
+            msg.sender == _issuer || msg.sender == repo.codeOwner,
             "only issuer or code owner"
         );
         _;

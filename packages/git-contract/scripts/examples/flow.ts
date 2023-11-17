@@ -16,7 +16,9 @@ async function main () {
   const commitHash = ethers.utils.arrayify("0x7a84c004625e5b1b037b3083f583b52d9f7a3005")
   const gitInit = await gitFactory.getRepoAddress(
     commitHash,
+    "testName",
     "testCID",
+    "main",
   )
   const receipt = await gitInit.wait()
 
@@ -33,7 +35,8 @@ async function main () {
   const gitContract = new ethers.Contract(gitAddress, gitABI.abi, wallet)
 
   console.log("factory", await gitContract.factory())
-  console.log("owner", await gitContract.codeOwner())
+  console.log("repo", await gitContract.repo())
+  console.error("repo2", await gitContract.getRepoContent())
   console.log("commitHash", await gitContract.getLatestPack())
 
   // generate a commit hash for test
