@@ -47,6 +47,7 @@ contract Git is Bounty {
     // === struct ===
     // commit struct for git
     struct Commit {
+        bytes20 newHash; // sha1 hash of the commit
         bytes commit; // commit with word count
         bytes tree; // tree + sha
         bytes message; // left message or gpg sign
@@ -89,6 +90,11 @@ contract Git is Bounty {
             "bounty is closed or not exist"
         );
 
+        require(
+            contributer[msg.sender][contributeCount[msg.sender] - 1] ==
+                latestCommit,
+            "need to contribute to this repo branch"
+        );
         uint256 count = contributeCount[msg.sender];
 
         Request memory request = Request(
@@ -107,29 +113,26 @@ contract Git is Bounty {
     // @param parent: bytes20 sha1 hash of the parent commit
     function merge(
         Commit memory commit,
-        bytes20 newHash,
         bytes20 commitParent
     ) public onlyCodeOwner {
         require(
-            newHash == verifyMergeParent(commit, commitParent),
+            commit.newHash == verifyMergeParent(commit, commitParent),
             "need to parent to this branch"
         );
-        latestCommit = newHash;
+        latestCommit = commit.newHash;
     }
 
-    function push(
-        Commit memory commit,
-        bytes20 newHash,
-        string memory _cid
-    ) internal {
+    function testpush(Commit memory commit) public {}
+
+    function push(Commit memory commit, string memory _cid) public {
         require(
-            newHash == verifyCommitParent(commit),
+            commit.newHash == verifyCommitParent(commit),
             "need to parent to this repo branch"
         );
         uint256 count = contributeCount[msg.sender];
-        contributer[msg.sender][count] = newHash;
+        contributer[msg.sender][count] = commit.newHash;
         contributeCount[msg.sender] = count + 1;
-        emit contribute(msg.sender, newHash);
+        emit contribute(msg.sender, commit.newHash);
     }
 
     function push(Commit memory commit, bytes20 newHash) internal {
@@ -145,23 +148,18 @@ contract Git is Bounty {
 
     function multiCommitPush(
         Commit[] memory commits,
-        bytes20[] memory newHashes,
         string memory _cid
-    ) internal {
-        require(
-            newHashes.length == commits.length,
-            "commit length count must be equal to newHashes length"
-        );
+    ) public {
         for (uint256 i = 0; i < commits.length; i++) {
             require(
-                newHashes[i] == verifyCommitParent(commits[i]),
+                commits[i].newHash == verifyCommitParent(commits[i]),
                 "need to parent to this repo branch"
             );
         }
         uint256 count = contributeCount[msg.sender];
-        contributer[msg.sender][count] = newHashes[newHashes.length - 1];
+        contributer[msg.sender][count] = commits[commits.length - 1].newHash;
         contributeCount[msg.sender] = count + 1;
-        emit contribute(msg.sender, newHashes[newHashes.length - 1]);
+        emit contribute(msg.sender, commits[commits.length - 1].newHash);
     }
 
     // === internal ===
@@ -169,7 +167,7 @@ contract Git is Bounty {
     // @param commit: commit struct
     function verifyCommitParent(
         Commit memory commit
-    ) internal view returns (bytes20) {
+    ) internal returns (bytes20) {
         bytes memory data = abi.encodePacked(
             commit.commit,
             commit.tree,
@@ -178,6 +176,7 @@ contract Git is Bounty {
             bytes("\n"),
             commit.message
         );
+        emit test(SHA1.sha1(data), "test");
         return SHA1.sha1(data);
     }
 
