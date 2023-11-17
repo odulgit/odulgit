@@ -1,5 +1,5 @@
 {
-  "extends": "tsconfig/base.json",
+  "extends": "tsconfig/base-esm.json",
   "include": [
     "hardhat.config.ts",
     "scripts/**/*",
