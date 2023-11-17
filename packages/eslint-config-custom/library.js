@@ -19,6 +19,10 @@ module.exports = {
   parserOptions: {
     project,
   },
+  rules: {
+    'no-console': 'warn',
+    'eslint-comments/require-description': 'off',
+  },
   globals: {
     React: true,
     JSX: true,

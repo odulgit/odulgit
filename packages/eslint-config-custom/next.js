@@ -19,6 +19,7 @@ module.exports = {
     "@vercel/style-guide/eslint/react",
     "@vercel/style-guide/eslint/next",
     "eslint-config-turbo",
+    "ericlint"
   ].map(require.resolve),
   parserOptions: {
     project,
@@ -37,6 +38,15 @@ module.exports = {
   ignorePatterns: ["node_modules/", "dist/"],
   // add rules configurations here
   rules: {
+    "@typescript-eslint/await-thenable": "off",
     "import/no-default-export": "off",
+    "import/no-extraneous-dependencies": [
+      "error",
+      {
+        devDependencies: false,
+        optionalDependencies: false,
+        peerDependencies: false,
+      },
+    ],
   },
 };
