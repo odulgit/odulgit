@@ -1,8 +1,8 @@
-import { Argv } from 'yargs'
+import { Argv } from "yargs"
 
-export const command = 'clone'
+export const command = "clone"
 
-export const desc = 'clone data'
+export const desc = "clone data"
 
 export const builder = (yargs: Argv<any>) => {
   return yargs
