@@ -46,7 +46,7 @@ jobs:
         run: pnpm install
 
       - name: Build my App
-        run: pnpm run build
+        run: pnpm run build --filter web
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v2
