@@ -3,9 +3,20 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import Container from "@/components/ui/container";
-import { Menu, Moon, ShoppingCart, Sun } from "lucide-react";
+import { Icons } from "@/components/ui/icons";
+import {
+    useWeb3Modal,
+    useWeb3ModalEvents,
+    useWeb3ModalState,
+} from '@web3modal/wagmi/react'
+import { useAccount } from 'wagmi'
 
 const MainNav = () => {
+    const { address, isConnected } = useAccount()
+
+    const modal = useWeb3Modal()
+    const state = useWeb3ModalState()
+
     const routes = [
         {
             href: "/home",
@@ -48,7 +59,17 @@ const MainNav = () => {
                         ))}
                     </nav>
                     <div className="flex items-center">
-                        Wallet
+                        {!isConnected
+                            ? <Button variant="wallet" onClick={() => modal.open()}>
+                                {state.open
+                                    ? <div className="flex flex-row items-center">
+                                        <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+                                        <p>Connecting...</p>
+                                    </div>
+                                    : "Connect Wallet"}
+                            </Button>
+                            : <w3m-account-button />
+                        }
                     </div>
                 </div>
             </Container>
