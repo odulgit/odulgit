@@ -13,6 +13,7 @@ contract Git is Bounty {
     // @TODO: description of the repo (can edit)
     // @TODO: issue count
     // @TODO: issue content
+    Repo public repo;
     uint256 public requestCount = 0;
     mapping(uint256 => Request) public requests;
     mapping(bytes20 => string) public cid;
@@ -58,6 +59,12 @@ contract Git is Bounty {
     }
 
     // === struct ===
+    struct Repo {
+        address codeOwner;
+        bytes20 latestCommit;
+        string name;
+        string defaultBranch;
+    }
     // commit struct for git
     struct Commit {
         bytes20 thisHash; // sha1 hash of the commit
@@ -87,11 +94,15 @@ contract Git is Bounty {
     function initialize(
         address _codeOwner,
         bytes20 _commitHash,
-        string memory _cid
+        string memory _name,
+        string memory _cid,
+        string memory _defaultBranch
     ) external {
         require(msg.sender == factory, "forbidden");
-        codeOwner = _codeOwner;
-        latestCommit = _commitHash;
+        repo.codeOwner = _codeOwner;
+        repo.latestCommit = _commitHash;
+        repo.name = _name;
+        repo.defaultBranch = _defaultBranch;
 
         cid[_commitHash] = _cid;
         mainCommitExist[_commitHash] = true;
@@ -205,6 +216,10 @@ contract Git is Bounty {
     // === view ===
     function getLatestPack() public view returns (bytes20) {
         return latestCommit;
+    }
+
+    function getRepoContent() public view returns (Repo memory) {
+        return repo;
     }
 
     function bytes20ToHexStr(

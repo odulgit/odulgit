@@ -20,7 +20,7 @@
     "dotenv": "16.3.1",
     "eslint-config-custom": "workspace:*",
     "ethers": "^5.0.0",
-    "hardhat": "2.18.1",
+    "hardhat": "2.19.0",
     "ts-node": "^10.9.1",
     "tsconfig": "workspace:*",
     "typescript": "^4.5.3"

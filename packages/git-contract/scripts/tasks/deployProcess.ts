@@ -71,7 +71,7 @@ task("deploy:gitfactory", "Deploy git factory")
     const deployContract: any = await contractFactory.connect(signer).deploy({
       maxPriorityFeePerGas: feeData.maxPriorityFeePerGas,
       maxFeePerGas: feeData.maxFeePerGas,
-      gasLimit: 4000000,
+      gasLimit: 6000000,
     })
     console.log(`GitFactory.sol deployed to ${deployContract.address}`)
 
