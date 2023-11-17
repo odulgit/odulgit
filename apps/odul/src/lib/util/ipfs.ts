@@ -112,7 +112,7 @@ export const downloadDir = async (cid: string, dir: string): Promise<Buffer> => 
     if (entry.type === "file") {
       fs.writeFileSync(`${dir}/${entry.name}`, Buffer.from(entry.unixfs.data || []))
     } else if (entry.type === "directory") {
-      fs.mkdirSync(`${dir}/${entry.name}`)
+      fs.mkdirSync(`${dir}/${entry.name}`, { recursive: true })
       await downloadDir(entry.cid.toString(), `${dir}/${entry.name}`)
     }
   }
