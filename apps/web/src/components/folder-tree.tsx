@@ -125,7 +125,7 @@ const TreeItem = React.forwardRef<
 
                                         }
                                         {!item.icon && FolderIcon &&
-                                            <img className="mr-2" src="./Icon-folder.svg" alt="Folder Icon" />
+                                            <img className="mr-2" src="/Icon-folder.svg" alt="Folder Icon" />
 
                                         }
                                         <span className="text-md truncate">{item.name}</span>
@@ -185,7 +185,7 @@ const Leaf = React.forwardRef<
             {...props}
         >
             {item.icon && <item.icon className="h-4 w-4 shrink-0 mr-2 text-accent-foreground/50" aria-hidden="true" />}
-            {!item.icon && Icon && <img className="mr-2" src="./Icon-file.svg" alt="File Icon" />}
+            {!item.icon && Icon && <img className="mr-2" src="/Icon-file.svg" alt="File Icon" />}
             <span className="flex-grow text-md truncate">{item.name}</span>
         </div>
     );
