@@ -1,0 +1,8 @@
+{
+  "extends": "tsconfig/base-esm.json",
+  "include": [
+    "hardhat.config.ts",
+    "scripts/**/*",
+  ],
+  "exclude": ["node_modules"]
+}
