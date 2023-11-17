@@ -21,11 +21,11 @@ const buttonVariants = cva(
         wallet: "bg-purple-800 hover:bg-purple-500 rounded-full"
       },
       size: {
-        default: "h-8 w-40 px-4 py-2",
+        default: "h-8 w-40 px-5 py-2",
         home: "h-11 w-40",
         origin: "h-10 px-4 py-2",
-        sm: "h-9 rounded-md px-3",
-        lg: "h-11 rounded-md px-8",
+        sm: "h-8 w-25 px-5 py-2",
+        lg: "h-8 px-5 py-2",
         icon: "h-10 w-10",
       },
     },

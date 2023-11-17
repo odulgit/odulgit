@@ -4,6 +4,8 @@ import Container from '@/components/ui/container';
 import { Button } from '@/components/ui/button'
 import { useEffect, useState } from 'react'
 import { TopBountyCard } from '@/components/Card/top-bounty-card';
+import { useRouter } from 'next/navigation'
+
 export default function Home() {
   const mockTopBountyRepo = [
     {
@@ -27,6 +29,7 @@ export default function Home() {
   ]
   const [totalBounty, setTotalBounty] = useState('6,750,500')
   const [topBountyRepos, setBountyRepo] = useState(mockTopBountyRepo)
+  const router = useRouter()
   return (
     <main className='background-home pt-16'
       style={{
@@ -39,7 +42,7 @@ export default function Home() {
               A Repository Place
             </div>
             <div className='font-roboto-normal text-xl mb-6'>Used by leading enterprises</div>
-            <Button variant="home" size="home" >Get Started</Button>
+            <Button variant="home" size="home" onClick={() => (router.push('/repos'))} >Get Started</Button>
           </div>
           <div className='custom-text text-6xl mt-36'>
             Ξ {totalBounty}
@@ -61,6 +64,6 @@ export default function Home() {
           </div>
         </div>
       </Container>
-    </main>
+    </main >
   );
 }
