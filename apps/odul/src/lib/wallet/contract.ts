@@ -1,19 +1,21 @@
 import { providers, BytesLike, Wallet, Contract } from "ethers"
 import { createWalletProvider, walletDisconnect } from "./wallet"
-import { config as dotenvConfig } from "dotenv"
 import { resolve } from "node:path"
 import fs from "node:fs"
 import { getConfig } from "../service/config"
 
-dotenvConfig({ path: resolve(__dirname, "../../../.env") })
-
 const pk: string | undefined = getConfig().ethereum?.privateKey
+const contractAddr: string | undefined = getConfig().ethereum?.contract
 if (!pk) {
-  throw new Error("Please set your pk in a .env file")
+  throw new Error("Please set your pk in config file")
+}
+if (!contractAddr) {
+  throw new Error("Please set your git factory in config file")
 }
 
 const gitFactoryContractABi = JSON.parse(fs.readFileSync(resolve(__dirname, "./GitFactory.json"), "utf-8"))
 const gitContractABi = JSON.parse(fs.readFileSync(resolve(__dirname, "./Git.json"), "utf-8"))
+
 export const getWeb3Wallet = async () => {
   const provider = await createWalletProvider()
   const wallet = new providers.Web3Provider(provider)
@@ -37,7 +39,7 @@ export const testWalletConnect = async () => {
 export const getGitFactoryContract = () => {
   const { wallet } = getWallet()
   const contract = new Contract(
-    getConfig().ethereum?.contract!,
+    contractAddr,
     gitFactoryContractABi.abi,
     wallet,
   )

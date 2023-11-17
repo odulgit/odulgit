@@ -5,7 +5,8 @@ export interface GitOption {
   workTree?: string
 }
 
-export const getEnv = (option?: GitOption): Parameters<typeof runCommand>[2] => {
+export const getEnv = (option?: GitOption): Parameters<typeof runCommand>[2] | undefined => {
+  if (option === undefined) return undefined
   const env: (typeof process.env) = {}
 
   if (option?.workTree) {

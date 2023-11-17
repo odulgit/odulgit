@@ -13,13 +13,13 @@ export const clone = async (dto: {
   const dir = dto.directory || repo
   const gitDir = `${dir}/.git`
 
-  if (fs.existsSync(dir)) {
+  if (fs.existsSync(gitDir)) {
     throw new Error("direction is existed")
   }
 
   const { head, branch } = await fetch({
     repository: dto.repository,
-    gitDir: gitDir,
+    dir,
   })
   fs.mkdirSync(`${gitDir}/refs/heads`, { recursive: true })
   fs.writeFileSync(`${gitDir}/refs/heads/${branch}`, `${head}\n`)
@@ -27,4 +27,6 @@ export const clone = async (dto: {
   await reset("hard", "HEAD", { dir: `${dir}/.git`, workTree: dir })
 
   await setRepoAddress(dto.repository, { dir: gitDir, workTree: dir })
+
+  return { head, branch }
 }

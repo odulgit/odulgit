@@ -14,7 +14,7 @@ export const remoteAdd = async (
       name,
       url,
     ],
-    options && getEnv(options),
+    getEnv(options),
   )
   return result
 }
@@ -30,7 +30,7 @@ export const remoteGet = async (
       "get-url",
       name,
     ],
-    options && getEnv(options),
+    getEnv(options),
   )
   return result.stdout
 }

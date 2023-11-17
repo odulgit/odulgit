@@ -10,5 +10,8 @@ export const revList = async (
       commit,
     ],
   )
-  return result.stdout!.trim().split("\n")
+  if (!result.stdout) {
+    throw Error("Everything up-to-date")
+  }
+  return result.stdout.trim().split("\n")
 }

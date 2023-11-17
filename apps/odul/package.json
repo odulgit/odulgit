@@ -13,7 +13,7 @@
     "build": "tsc",
     "build-cli": "pkg .",
     "lint": "eslint .",
-    "dev-run": "ts-node src/index.ts",
+    "cli": "ts-node src/index.ts",
     "dev": "nodemon -w src -e ts --exec pnpm build"
   },
   "keywords": [],
