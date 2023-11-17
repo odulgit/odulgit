@@ -3,12 +3,18 @@ pragma solidity ^0.8.0;
 
 import {SHA1} from "../libraries/SHA1.sol";
 import {Bounty} from "./Bounty.sol";
+import {Bounty} from "./Bounty.sol";
 
+contract Git is Bounty {
 contract Git is Bounty {
     //  === public storage ===
     address public factory;
     address public codeOwner;
     bytes20 public latestCommit;
+    // @TODO: name of the repo
+    // @TODO: description of the repo (can edit)
+    // @TODO: issue count
+    // @TODO: issue content
     uint256 public requestCount = 0;
     mapping(uint256 => Request) public requests;
     mapping(bytes20 => string) public cid;
@@ -46,7 +52,12 @@ contract Git is Bounty {
         bytes message; // left message or gpg sign
     }
 
+    // @TODO Brnach Name
     struct Request {
+        address contributer;
+        uint256 linkBounty;
+        bytes20 commitHash;
+        string bundleUrl;
         address contributer;
         uint256 linkBounty;
         bytes20 commitHash;
@@ -69,28 +80,21 @@ contract Git is Bounty {
         cid[_commitHash] = _cid;
     }
 
-    // API 2 : create request
-    function createRequest(
-        uint256 bountyId,
-        Commit[] memory commits,
-        bytes20[] memory newHashes,
-        string memory bundleUrl
-    ) public {
+    // API 2 : reward request
+    function rewardRequest(uint256 bountyId, string memory bundleUrl) public {
         require(
-            newHashes.length == commits.length,
-            "commit length count must be equal to newHashes length"
-        );
-        require(
+            bountyContent[bountyId].openStatus == 1,
+            "bounty is closed or not exist"
             bountyContent[bountyId].openStatus == 1,
             "bounty is closed or not exist"
         );
 
-        multiCommitPush(commits, newHashes);
+        uint256 count = contributeCount[msg.sender];
 
         Request memory request = Request(
             msg.sender,
             bountyId,
-            newHashes[newHashes.length - 1],
+            contributer[msg.sender][count],
             bundleUrl
         );
         requests[requestCount] = request;
@@ -124,10 +128,25 @@ contract Git is Bounty {
         emit contribute(msg.sender, newHash);
     }
 
+    function push(Commit memory commit, bytes20 newHash) internal {
+        require(
+            newHash == verifyCommitParent(commit),
+            "need to parent to this repo branch"
+        );
+        uint256 count = contributeCount[msg.sender];
+        contributer[msg.sender][count] = newHash;
+        contributeCount[msg.sender] = count + 1;
+        emit contribute(msg.sender, newHash);
+    }
+
     function multiCommitPush(
         Commit[] memory commits,
         bytes20[] memory newHashes
     ) internal {
+        require(
+            newHashes.length == commits.length,
+            "commit length count must be equal to newHashes length"
+        );
         for (uint256 i = 0; i < commits.length; i++) {
             require(
                 newHashes[i] == verifyCommitParent(commits[i]),

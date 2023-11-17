@@ -4,6 +4,8 @@ import {Git} from "./core/Git.sol";
 
 contract GitFactory {
     event deployedAddress(address indexed repo, address indexed owner);
+    mapping(uint256 => address) public repos;
+    uint256 public repoCount;
 
     // @param commitHash: bytes20 sha1 hash of the first commit
     // @param cid: string of the first commit cid
@@ -13,6 +15,8 @@ contract GitFactory {
     ) public returns (address) {
         Git git = new Git();
         git.initialize(msg.sender, commitHash, cid);
+        repos[repoCount] = address(git);
+        repoCount++;
 
         emit deployedAddress(address(git), msg.sender);
         return address(git);

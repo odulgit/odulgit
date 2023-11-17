@@ -13,25 +13,29 @@ async function main () {
   const gitFactory = new ethers.Contract(address.main, abi.abi, wallet)
 
   console.log("---------- Git Factory ----------")
-  const commitHash = ethers.utils.arrayify("0xec551900e483bf0d9a67c17dd14a6d59a7c9095c")
+  const commitHash = ethers.utils.arrayify("0x7a84c004625e5b1b037b3083f583b52d9f7a3005")
   const gitInit = await gitFactory.getRepoAddress(
     commitHash,
     "testCID",
   )
   const receipt = await gitInit.wait()
-  console.log(receipt)
 
   const deployedAddressEvent = receipt.events?.find((event: { event: string }) => event.event === "deployedAddress")
   const contractAddress = deployedAddressEvent?.args[0]
   const ownerAddress = deployedAddressEvent?.args[1]
 
-  console.log("Contract Address:", contractAddress)
-  console.log("Owner Address:", ownerAddress)
+  console.log(contractAddress)
+  // 0x34d0E48cFaECAA7fB0fe77D0bEc029451CA521B8
+  const gitAddress = contractAddress
 
   console.log("---------- Git Contract ----------")
   const gitABI = loadContract("quorum", "Git", "core").abi
-  const gitContract = new ethers.Contract(contractAddress, gitABI.abi, wallet)
-  // create contract
+  const gitContract = new ethers.Contract(gitAddress, gitABI.abi, wallet)
+
+  console.log("factory", await gitContract.factory())
+  console.log("owner", await gitContract.codeOwner())
+  console.log("commitHash", await gitContract.getLatestPack())
+
   // generate a commit hash for test
   // await gitContract.createRequest(1, [], [], "test")
   // call contract to get git repo (another signer)
