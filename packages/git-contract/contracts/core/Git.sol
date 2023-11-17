@@ -2,14 +2,15 @@
 pragma solidity ^0.8.0;
 
 import {SHA1} from "../libraries/SHA1.sol";
+import {Bounty} from "./Bounty.sol";
 
-// import { Bounty } from "./bounty.sol";
-
-contract Git {
+contract Git is Bounty {
     //  === public storage ===
     address public factory;
     address public codeOwner;
     bytes20 public latestCommit;
+    uint256 public requestCount = 0;
+    mapping(uint256 => Request) public requests;
     mapping(bytes20 => string) public cid;
     mapping(address => uint256) public contributeCount;
     mapping(address => mapping(uint256 => bytes20)) public contributer;
@@ -46,12 +47,10 @@ contract Git {
     }
 
     struct Request {
-        address issuer;
-        uint256 bounty;
-        uint256 deadline;
-        uint256 commitCount;
-        bytes20[] commits;
-        bytes20[] mergeCommit;
+        address contributer;
+        uint256 linkBounty;
+        bytes20 commitHash;
+        string bundleUrl;
     }
 
     // API 1 : initialize repo (first commit)
@@ -70,18 +69,32 @@ contract Git {
         cid[_commitHash] = _cid;
     }
 
-    // API 2 : push commit to repo
-    // @param commit: commit struct
-    // @param newHash: bytes20 sha1 hash of the new commit
-    function push(Commit memory commit, bytes20 newHash) public {
+    // API 2 : create request
+    function createRequest(
+        uint256 bountyId,
+        Commit[] memory commits,
+        bytes20[] memory newHashes,
+        string memory bundleUrl
+    ) public {
         require(
-            newHash == verifyCommitParent(commit),
-            "need to parent to this repo branch"
+            newHashes.length == commits.length,
+            "commit length count must be equal to newHashes length"
         );
-        uint256 count = contributeCount[msg.sender];
-        contributer[msg.sender][count] = newHash;
-        contributeCount[msg.sender] = count + 1;
-        emit contribute(msg.sender, newHash);
+        require(
+            bountyContent[bountyId].openStatus == 1,
+            "bounty is closed or not exist"
+        );
+
+        multiCommitPush(commits, newHashes);
+
+        Request memory request = Request(
+            msg.sender,
+            bountyId,
+            newHashes[newHashes.length - 1],
+            bundleUrl
+        );
+        requests[requestCount] = request;
+        requestCount++;
     }
 
     // API 3 : merge commit to repo
@@ -100,13 +113,21 @@ contract Git {
         latestCommit = newHash;
     }
 
-    // API 4 : multi commit push (suggest max 10 commits)
-    // @param commits: commit struct array
-    // @param newHashes: bytes20 sha1 hash array of the new commits
+    function push(Commit memory commit, bytes20 newHash) internal {
+        require(
+            newHash == verifyCommitParent(commit),
+            "need to parent to this repo branch"
+        );
+        uint256 count = contributeCount[msg.sender];
+        contributer[msg.sender][count] = newHash;
+        contributeCount[msg.sender] = count + 1;
+        emit contribute(msg.sender, newHash);
+    }
+
     function multiCommitPush(
         Commit[] memory commits,
         bytes20[] memory newHashes
-    ) public {
+    ) internal {
         for (uint256 i = 0; i < commits.length; i++) {
             require(
                 newHashes[i] == verifyCommitParent(commits[i]),
