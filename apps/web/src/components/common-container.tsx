@@ -1,18 +1,20 @@
 import Container from "@/components/ui/container"
+import { cn } from "@/lib/utils";
 
 interface ContainerProps {
+    className?: string,
     children: React.ReactNode;
 }
 
 const CommContainer: React.FC<ContainerProps> = ({
-    children
+    className, children
 }) => {
     return (
         <Container>
-            <div className="bg-gray-600 bg-opacity-80 border border-gray-700 rounded-lg">
+            <div className={cn("bg-gray-600 bg-opacity-80 border rounded-lg", className)}>
                 {children}
             </div>
-        </Container>
+        </Container >
     );
 };
 
