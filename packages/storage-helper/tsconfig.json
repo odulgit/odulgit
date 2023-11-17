@@ -1,0 +1,9 @@
+{
+  "extends": "tsconfig/base.json",
+  "include": [
+    "hardhat.config.ts",
+    "scripts/**/*",
+    "src/**/*",
+  ],
+  "exclude": ["node_modules"]
+}
