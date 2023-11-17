@@ -13,5 +13,8 @@
     "turbo": "latest"
   },
   "packageManager": "pnpm@8.9.0",
-  "name": "odulgit"
+  "name": "odulgit",
+  "engines": {
+    "pnpm": "^8.9.0"
+  }
 }
