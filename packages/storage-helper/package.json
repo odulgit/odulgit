@@ -12,11 +12,13 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@ensdomains/buffer": "0.1.1",
     "@lighthouse-web3/sdk": "0.2.8",
     "@zondax/filecoin-solidity": "4.0.3",
     "cids": "1.1.9",
     "ethers": "5.7.2",
-    "ipfs-car": "1.0.0"
+    "ipfs-car": "1.0.0",
+    "solidity-cborutils": "2.0.0"
   },
   "devDependencies": {
     "@nomiclabs/hardhat-ethers": "2.2.3",
