@@ -5,7 +5,6 @@ import * as AccordionPrimitive from "@radix-ui/react-accordion";
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { cn } from "@/lib/utils";
 import { ChevronRight, type LucideIcon } from "lucide-react";
-import useResizeObserver from "use-resize-observer";
 
 interface TreeDataItem {
     id: string;
@@ -71,24 +70,20 @@ const Tree = React.forwardRef<
         return ids;
     }, [data, initialSlelectedItemId])
 
-    const { ref: refRoot, width, height } = useResizeObserver();
-
     return (
-        <div ref={refRoot} className={cn("overflow-hidden", className)}>
-            <ScrollArea style={{ width, height }}>
-                <div className="relative p-2">
-                    <TreeItem
-                        data={data}
-                        ref={ref}
-                        selectedItemId={selectedItemId}
-                        handleSelectChange={handleSelectChange}
-                        expandedItemIds={expandedItemIds}
-                        FolderIcon={folderIcon}
-                        ItemIcon={itemIcon}
-                        {...props}
-                    />
-                </div>
-            </ScrollArea>
+        <div className={cn("overflow-hidden", className)}>
+            <div className="relative p-4">
+                <TreeItem
+                    data={data}
+                    ref={ref}
+                    selectedItemId={selectedItemId}
+                    handleSelectChange={handleSelectChange}
+                    expandedItemIds={expandedItemIds}
+                    FolderIcon={folderIcon}
+                    ItemIcon={itemIcon}
+                    {...props}
+                />
+            </div>
         </div>
     )
 })
@@ -127,14 +122,13 @@ const TreeItem = React.forwardRef<
                                                 className="h-4 w-4 shrink-0 mr-2 text-accent-foreground/50"
                                                 aria-hidden="true"
                                             />
+
                                         }
                                         {!item.icon && FolderIcon &&
-                                            <FolderIcon
-                                                className="h-4 w-4 shrink-0 mr-2 text-accent-foreground/50"
-                                                aria-hidden="true"
-                                            />
+                                            <img className="mr-2" src="./Icon-folder.svg" alt="Folder Icon" />
+
                                         }
-                                        <span className="text-sm truncate">{item.name}</span>
+                                        <span className="text-md truncate">{item.name}</span>
                                     </AccordionTrigger>
                                     <AccordionContent className="pl-6">
                                         <TreeItem
@@ -191,8 +185,8 @@ const Leaf = React.forwardRef<
             {...props}
         >
             {item.icon && <item.icon className="h-4 w-4 shrink-0 mr-2 text-accent-foreground/50" aria-hidden="true" />}
-            {!item.icon && Icon && <Icon className="h-4 w-4 shrink-0 mr-2 text-accent-foreground/50" aria-hidden="true" />}
-            <span className="flex-grow text-sm truncate">{item.name}</span>
+            {!item.icon && Icon && <img className="mr-2" src="./Icon-file.svg" alt="File Icon" />}
+            <span className="flex-grow text-md truncate">{item.name}</span>
         </div>
     );
 })

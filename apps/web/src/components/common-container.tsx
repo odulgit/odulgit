@@ -1,17 +1,20 @@
 import Container from "@/components/ui/container"
 import { cn } from "@/lib/utils";
+import React from "react";
 
-interface ContainerProps {
-    className?: string,
-    children: React.ReactNode;
-}
+type ContainerProps =
+    React.HTMLAttributes<HTMLDivElement> &
+    {
+        className?: string,
+        children: React.ReactNode;
+    }
 
 const CommContainer: React.FC<ContainerProps> = ({
-    className, children
+    style, className, children
 }) => {
     return (
         <Container>
-            <div className={cn("bg-gray-600 bg-opacity-80 border rounded-lg", className)}>
+            <div className={cn("bg-gray-600 bg-opacity-80 border rounded-lg ", className)} style={style}>
                 {children}
             </div>
         </Container >

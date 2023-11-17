@@ -1,12 +1,15 @@
+import { cn } from "@/lib/utils";
+
 interface ContainerProps {
+    className?: string,
     children: React.ReactNode;
 }
 
 const Container: React.FC<ContainerProps> = ({
-    children
+    className, children
 }) => {
     return (
-        <div className="mx-auto w-full">
+        <div className={cn("mx-auto w-full", className)}>
             {children}
         </div>
     );

@@ -36,7 +36,7 @@ const MainNav = () => {
                     </div>
                     <nav className="mx-5 flex flex-1 items-center space-x-4 lg:space-x-6 hidden md:block border-b">
                         {routes.map((route, i) => (
-                            <Button asChild variant="ghost">
+                            <Button asChild variant="ghost" size="origin">
                                 <Link
                                     key={i}
                                     href={route.href}

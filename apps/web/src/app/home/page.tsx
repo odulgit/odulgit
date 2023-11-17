@@ -38,8 +38,8 @@ export default function Home() {
             <div className='font-roboto text-5xl font-bold leading-14'>
               A Repository Place
             </div>
-            <div className='font-roboto-normal text-xl mb-3'>Used by leading enterprises</div>
-            <Button>Get Started</Button>
+            <div className='font-roboto-normal text-xl mb-6'>Used by leading enterprises</div>
+            <Button variant="home" size="home" >Get Started</Button>
           </div>
           <div className='custom-text text-6xl mt-36'>
             Ξ {totalBounty}
