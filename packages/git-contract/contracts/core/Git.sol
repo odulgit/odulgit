@@ -117,7 +117,11 @@ contract Git is Bounty {
         latestCommit = newHash;
     }
 
-    function push(Commit memory commit, bytes20 newHash) internal {
+    function push(
+        Commit memory commit,
+        bytes20 newHash,
+        string memory _cid
+    ) internal {
         require(
             newHash == verifyCommitParent(commit),
             "need to parent to this repo branch"
@@ -141,7 +145,8 @@ contract Git is Bounty {
 
     function multiCommitPush(
         Commit[] memory commits,
-        bytes20[] memory newHashes
+        bytes20[] memory newHashes,
+        string memory _cid
     ) internal {
         require(
             newHashes.length == commits.length,
