@@ -59,7 +59,7 @@ export default function BountyList() {
                       <div className="flex items-center text-xl font-roboto-bold">
                         <Badge variant="default">
                           <img src="./Icon-value.svg" alt="Value Icon" className='mr-1' />
-                          {bounty.bountyCount}
+                          {bounty.bountyAmount}
                         </Badge>
                       </div>
                     </div>
