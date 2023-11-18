@@ -4,7 +4,6 @@ import { WagmiConfig } from 'wagmi'
 import {
     goerli,
     sepolia,
-    arbitrumSepolia,
     scrollSepolia,
     polygonZkEvmTestnet,
     gnosisChiado,
@@ -18,7 +17,7 @@ const chains = [
     scrollSepolia,
     gnosisChiado,
     polygonZkEvmTestnet,
-    arbitrumSepolia
+    makeChain('Stylus Testnet', 'https://stylus-testnet.arbitrum.io/rpc', 23011913)
 ]
 
 const projectId = process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID || 'ODULGIT_ID'
