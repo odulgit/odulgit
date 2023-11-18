@@ -107,7 +107,9 @@ export default function Page({ params }: { params: { repoAddress: string } }) {
                         Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
                     </div>
                     <div>
-                        Edit
+                      <Button variant="ghost" size="icon" onClick={() => { handleContinued() }}>
+                        <img src="../Icon-edit.svg" alt="Edit Icon" />
+                      </Button>
                     </div>
                 </div>
               </CommContainer>
@@ -124,7 +126,6 @@ export default function Page({ params }: { params: { repoAddress: string } }) {
                         <div>Repositories URL</div>
                       </div>
                       <div className="w-full flex flex-row">
-                        {/* <div className="flex-1">{repo?.address}</div> */}
                         <Input disabled className="custom-input" value={`https://odulgit.net/odulgit/repo-list/repo?address=${repo?.address}`} />
                         <Button
                           variant="ghost"
@@ -141,7 +142,6 @@ export default function Page({ params }: { params: { repoAddress: string } }) {
                             <img src="../Icon-copy.svg" alt="Copy Icon" />
                           )}
                         </Button>
-                        {/* odulgit/repo-list/repo?address=0x47A0520F21694f034900d1A0B0C182E26ff4D6e5 */}
                       </div>
                       <div className="flex justify-end mt-7">
                         <Button onClick={() => handleContinued()}>View All</Button>
