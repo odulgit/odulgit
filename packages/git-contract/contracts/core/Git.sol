@@ -116,12 +116,6 @@ contract Git is Bounty, Dao {
             "bounty is closed or not exist"
         );
 
-        require(
-            contributor[msg.sender][contributeCount[msg.sender] - 1].sha ==
-                repo.latestCommit,
-            "need to contribute to this repo branch"
-        );
-
         Request memory request = Request(
             msg.sender,
             contributeId,
