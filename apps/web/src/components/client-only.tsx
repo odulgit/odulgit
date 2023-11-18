@@ -5,7 +5,7 @@ interface ClientOnlyProps {
     children: React.ReactNode
 }
 
-function ClientOnly({ children }: ClientOnlyProps): React.ReactNode {
+function ClientOnly({ children }: ClientOnlyProps): any{
     const [hasMounted, setHasMounted] = useState<boolean>(false)
 
     useEffect(() => {
