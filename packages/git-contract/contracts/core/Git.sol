@@ -161,12 +161,10 @@ contract Git is Bounty, Dao {
         mainCommitExist[commit.thisHash] = true;
         cid[commit.thisHash] = _cid;
 
-        if (contributorRequest[_contributor][contributeId].linkBounty != 0) {
-            giveBounty(
-                contributorRequest[_contributor][contributeId].linkBounty,
-                _contributor
-            );
-        }
+        giveBounty(
+            contributorRequest[_contributor][contributeId].linkBounty,
+            _contributor
+        );
         join(_contributor);
     }
 
@@ -202,12 +200,12 @@ contract Git is Bounty, Dao {
     }
 
     // API 6: release
-    function release(string memory name, string memory _cid, bytes20 commit) public onlyCodeOwner {
-        releases[relaeseCount] = Release(
-            commit,
-            name,
-            _cid
-        );
+    function release(
+        string memory name,
+        string memory _cid,
+        bytes20 commit
+    ) public onlyCodeOwner {
+        releases[relaeseCount] = Release(commit, name, _cid);
         relaeseCount++;
     }
 
