@@ -4,10 +4,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import Container from "@/components/ui/container";
 import { Icons } from "@/components/ui/icons";
-import {
-  useWeb3Modal,
-  useWeb3ModalState,
-} from "@web3modal/wagmi/react";
+import { useWeb3Modal, useWeb3ModalState } from "@web3modal/wagmi/react";
 import { useAccount, useSignMessage } from "wagmi";
 import { useSearchParams } from "next/navigation";
 import {
@@ -15,7 +12,7 @@ import {
   useManageSubscription,
   useW3iAccount,
   useMessages,
-  useSubscription
+  useSubscription,
 } from "@web3inbox/widget-react";
 import { useCallback, useEffect } from "react";
 import { useToast } from "@/components/ui/use-toast";
@@ -70,9 +67,10 @@ const SubNav = () => {
   }, [signMessage, address, setAccount]);
 
   useEffect(() => {
-    if(messages.length > 0) {
-      handleToast(messages[-1].message)
-    }
+    console.log("messages: ", messages);
+    // if(messages.length > 0) {
+    //   handleToast(messages[-1].message)
+    // }
   }, [messages]);
 
   const handleRegistration = useCallback(async () => {
@@ -150,16 +148,17 @@ const SubNav = () => {
           </nav>
           <div className="flex items-center">
             {isW3iInitialized &&
-              !isSubscribed &&
-              !isSubscribing &&
-              !isUnsubscribing ? (
-                <Button variant="wallet" onClick={handleSubscribe}>
-                  Subscribe
-                </Button>
-              ) : <Button variant="wallet" onClick={handleUnSubscribe}>
-                  UnSubscribe
-                </Button>
-            }
+            !isSubscribed &&
+            !isSubscribing &&
+            !isUnsubscribing ? (
+              <Button variant="wallet" onClick={handleSubscribe}>
+                Subscribe
+              </Button>
+            ) : (
+              <Button variant="wallet" onClick={handleUnSubscribe}>
+                UnSubscribe
+              </Button>
+            )}
             {!isConnected ? (
               <Button variant="wallet" onClick={() => modal.open()}>
                 {state.open ? (
