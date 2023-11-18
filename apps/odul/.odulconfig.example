@@ -14,5 +14,5 @@ host=
 [ipfs.kubo]
 host=
 
-[filecoin.lighthouse]
+[filecoin.lightHouse]
 apiKey=
