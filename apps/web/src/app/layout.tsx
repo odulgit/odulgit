@@ -5,6 +5,7 @@ import MainNav from '../components/Navbar/main-nav'
 import { WagmiProvider } from '../components/Provider/wagmi-provider'
 import ClientOnly from '../components/client-only'
 import { ThemeProvider } from "@/components/theme-provider"
+import { Toaster } from "@/components/ui/toaster"
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -32,6 +33,7 @@ export default function RootLayout({
               <MainNav />
             </ClientOnly>
             {children}
+            <Toaster />
           </WagmiProvider>
         </ThemeProvider>
       </body>

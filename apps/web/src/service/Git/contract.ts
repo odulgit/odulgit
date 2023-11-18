@@ -21,7 +21,7 @@ export interface BountyData {
     title: any;
     description: any;
     openStatus:string;
-    bountyCount: any;
+    bountyAmount: any;
 }
 
 export interface RRData {
@@ -84,20 +84,20 @@ export const getBountyList = async (repoAddress:string) => {
   })
 
   for (let i = 0; i < Number(bountyCount); i++) {
-    const bountyContent = await publicClient.readContract({
+    const bountyInfo = await publicClient.readContract({
       address: repoAddress,
       abi: gitAbi,
-      functionName: 'bountyContent',
+      functionName: 'getBounty',
       args: [i],
     })
 
     const bounty:BountyData = {
-        id: i,
-        address: repoAddress,
-        title:bountyContent[0],
-        description:bountyContent[1],
-        openStatus:bountyContent[2],
-        bountyCount: Number(bountyCount),
+      id: i,
+      address: repoAddress,
+      title: bountyInfo[0].title,
+      description: bountyInfo[0].description,
+      openStatus: bountyInfo[0].openStatus,
+      bountyAmount: Number(bountyInfo[1]),
     }
     bountyList.push(bounty)
   }
