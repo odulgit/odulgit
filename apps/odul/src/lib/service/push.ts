@@ -25,8 +25,6 @@ export const push = async (dto: {
   await createBundle(bundleFile, commitPath)
   const cid = await uploadFile(fs.readFileSync(bundleFile))
 
-  // TODO: upload commits and cid to contract
-  console.log(`cid: ${cid}`)
-  console.log(`commits: ${commits.map(commit => commit.hash)}`)
-  await pushToContract(repoAddr, commits, cid)
+  const contribute = await pushToContract(repoAddr, commits, cid)
+  console.log(contribute)
 }

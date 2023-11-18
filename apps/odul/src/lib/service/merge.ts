@@ -7,6 +7,8 @@ import { merge as gitMergeCommand } from "../git/merge"
 import { uploadGitObjects } from "./init"
 import { revParse } from "../git/rev-parse"
 import { gc } from "../git/gc"
+import { mergeToContract } from "../wallet/invoke"
+import { catCommit } from "../git/cat-commit"
 
 export const merge = async (dto: {
   branch: string
@@ -15,7 +17,6 @@ export const merge = async (dto: {
   const repository = await getRepoAddress({ })
 
   const dir = await tempDir()
-  console.log(dir)
 
   const { branch: mainBranch } = await clone({ repository, directory: dir })
 
@@ -37,8 +38,8 @@ export const merge = async (dto: {
   fs.cpSync(`${dir}/.git/objects`, `${process.cwd()}/.git/objects`, { recursive: true })
   fs.writeFileSync(`${process.cwd()}/.git/refs/remotes/odul/${mainBranch}`, `${head}\n`)
   fs.writeFileSync(`${process.cwd()}/.git/refs/remotes/odul/HEAD`, `${head}\n`)
+  const commit = await catCommit(head)
+  const [contributer, contributeId] = dto.branch.split("/")
 
-  // TODO: call contract
-  console.log(head)
-  console.log(cid)
+  await mergeToContract(repository, commit, contributer, contributeId, cid)
 }

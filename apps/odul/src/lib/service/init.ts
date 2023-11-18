@@ -7,9 +7,9 @@ import { getRepoAddress } from "../wallet/invoke"
 import { utils } from "ethers"
 import { setRepoAddress } from "../git/remote"
 import { revParse } from "../git/rev-parse"
-export const init = async (branch = "main") => {
+export const init = async (name?: string, branch = "main") => {
   const commitHash = await revParse(branch)
-  const commitHashBytes = await utils.arrayify(`0x${commitHash}`)
+  const commitHashBytes = utils.arrayify(`0x${commitHash}`)
   const bundleFile = await tempFile()
   await createBundle(bundleFile, branch)
   const gitDir = await tempDir()
@@ -17,7 +17,7 @@ export const init = async (branch = "main") => {
 
   const cid = await uploadGitObjects(gitDir)
 
-  const repo = await getRepoAddress(commitHashBytes, cid)
+  const repo = await getRepoAddress(commitHashBytes, name || process.cwd().match(/[^/]*$/)![0], cid, branch)
   console.log("repo address:", repo)
 
   await setRepoAddress(repo)

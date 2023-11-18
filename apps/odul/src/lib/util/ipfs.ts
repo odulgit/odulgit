@@ -109,7 +109,7 @@ export const downloadDir = async (cid: string, dir: string): Promise<Buffer> => 
   const data: Buffer = Buffer.from([])
   const { CID } = await import("multiformats/cid")
   for await (const entry of unixFs.ls(CID.parse(cid))) {
-    if (entry.type === "file") {
+    if (entry.type === "file" && !fs.existsSync(`${dir}/${entry.name}`)) {
       fs.writeFileSync(`${dir}/${entry.name}`, Buffer.from(entry.unixfs.data || []))
     } else if (entry.type === "directory") {
       fs.mkdirSync(`${dir}/${entry.name}`, { recursive: true })

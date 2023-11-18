@@ -1,4 +1,3 @@
-import { sha1 } from "../util/sha1"
 import { getGitFactoryContract, getGitContract } from "./contract"
 import { utils } from "ethers"
 interface Commit {
@@ -14,11 +13,6 @@ const strToBytes = (str: string) => {
 }
 
 const catCommitPayload = (commit: Commit) => {
-  // console.log("wc", `0x${Buffer.from(strToBytes(`commit ${commit.content.length}\0`)).toString("hex")}`)
-  // console.log("tree", `0x${Buffer.from(strToBytes(`tree ${commit.tree}\n`)).toString("hex")}`)
-  // console.log("parents", commit.parents.map(parent => `0x${Buffer.from(strToBytes(`parent ${parent}\n`)).toString("hex")}`).join(""))
-  // console.log("msg", `0x${Buffer.from(strToBytes(commit.msg)).toString("hex")}`)
-  // console.log("----")
   const thisHash = utils.arrayify(`0x${commit.hash}`)
   const wordCount = strToBytes(`${commit.content.length}\0`)
   const tree = utils.arrayify(`0x${commit.tree}`)
@@ -32,9 +26,9 @@ const catCommitPayload = (commit: Commit) => {
     message,
   }
 }
-export const getRepoAddress = async (commitHashBytes: Uint8Array, cid: string) => {
+export const getRepoAddress = async (commitHashBytes: Uint8Array, name: string, cid: string, defaultBranch: string) => {
   const factory = await getGitFactoryContract()
-  const tx = await factory.getRepoAddress(commitHashBytes, cid)
+  const tx = await factory.getRepoAddress(commitHashBytes, name, cid, defaultBranch)
   const receipt = await tx.wait()
   const event = factory.interface.parseLog(receipt.logs[0])
 
@@ -43,19 +37,32 @@ export const getRepoAddress = async (commitHashBytes: Uint8Array, cid: string) =
 }
 
 export const pushToContract = async (repoAddr: string, commits: Commit[], cid: string) => {
-  const factory = await getGitContract(repoAddr)
+  const repo = getGitContract(repoAddr)
   const commit = commits.map(commit => catCommitPayload(commit))
 
   try {
     // TODO: correct the sha1 of push
-    const tx = await factory.push(commit, cid)
+    const tx = await repo.push(commit, cid)
     const receipt = await tx.wait()
-    const event = factory.interface.parseLog(receipt.logs[0])
-    console.log(event.args.sha)
+    const event = repo.interface.parseLog(receipt.logs[receipt.logs.length - 1])
+    return `${event.args.contributer}/${event.args.contributeID}`
   } catch (e: any) {
-    console.log(e)
-    if (e && e.reason) {
-      console.log(e)
+    if (e?.error?.reason) {
+      throw new Error(e?.error?.reason)
     }
+    throw e
+  }
+}
+
+export const mergeToContract = async (repoAddr: string, commit: Commit, contributer: string, contributeId: string, cid: string) => {
+  const repo = getGitContract(repoAddr)
+
+  try {
+    await repo.merge(catCommitPayload(commit), contributer, contributeId, cid)
+  } catch (e: any) {
+    if (e?.error?.reason) {
+      throw new Error(e?.error?.reason)
+    }
+    throw e
   }
 }
