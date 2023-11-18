@@ -12,7 +12,8 @@ import {
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "@/components/ui/tooltip"import { useMessages, useSubscription, useW3iAccount } from "@web3inbox/widget-react";
+} from "@/components/ui/tooltip"
+import { useMessages, useSubscription, useW3iAccount } from "@web3inbox/widget-react";
 
 export default function RRList() {
   const router = useRouter();
@@ -114,15 +115,15 @@ export default function RRList() {
                       Link Bounty: {Number(request.linkBounty)}
                     </div>
                   </div> */}
-                  <div className="flex flex-col space-y-2">
-                    {messages.map(({ id, message }) => (
-                      <div className="flex flex-row space-x-2">
-                        <div className="text-purple-400 text-xl font-roboto-bold">
-                          {message.title} - {message.body}
+                    <div className="flex flex-col space-y-2">
+                      {messages.map(({ id, message }) => (
+                        <div className="flex flex-row space-x-2">
+                          <div className="text-purple-400 text-xl font-roboto-bold">
+                            {message.title} - {message.body}
+                          </div>
                         </div>
-                      </div>
-                    ))}
-                  </div>
+                      ))}
+                    </div>
                   </CommContainer>
                 ))}
               </TooltipProvider>
