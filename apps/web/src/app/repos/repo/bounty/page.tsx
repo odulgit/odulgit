@@ -99,7 +99,6 @@ export default function BountyList() {
     },
   ];
 
-  const [issueList, setIssueList] = useState(mockIssueList);
   useEffect(() => {
     const fetchData = async () => {
       const repoAddress = searchParams.get('address') ?? ''
