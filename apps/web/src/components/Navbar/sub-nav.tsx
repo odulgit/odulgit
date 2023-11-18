@@ -10,10 +10,13 @@ import {
     useWeb3ModalState,
 } from '@web3modal/wagmi/react'
 import { useAccount } from 'wagmi'
-import { useRouter, usePathname } from "next/navigation";
+import { useRouter, usePathname, useSearchParams } from "next/navigation";
 
 
 const SubNav = () => {
+    const searchParams = useSearchParams()
+    const repoAddress = searchParams.get('address') ?? ''
+
     const { address, isConnected } = useAccount()
     const pathname = usePathname()
     const regex = /^(\/repos\/repo\/0x[0-9a-fA-F]+)/;
@@ -34,15 +37,15 @@ const SubNav = () => {
             label: "Odulgit",
         },
         {
-            href: "/repos",
+            href: "/repo-list",
             label: "Repositories",
         },
         {
-            href: `${repo}/bounty`,
+            href: `${repo}/bounty-list?address=${repoAddress}`,
             label: "Bounty",
         },
         {
-            href: `${repo}/reward-requests`,
+            href: `${repo}/reward-request-list?address=${repoAddress}`,
             label: "Reward Requests",
         },
     ];

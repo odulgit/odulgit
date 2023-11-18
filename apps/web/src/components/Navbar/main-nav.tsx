@@ -23,7 +23,7 @@ const MainNav = () => {
             label: "OdulGit",
         },
         {
-            href: "/repos",
+            href: "/repo-list",
             label: "Repositories",
         }
     ];
