@@ -45,12 +45,14 @@ export default function RR() {
   const formSchema = z.object({
     contributeId: z.string().refine((value) => value !== ''),
     bountyId: z.string().refine((value) => value !== ''),
+    agreed: z.boolean().refine((value) => value !== false),
   })
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       contributeId: '',
-      bountyId: ''
+      bountyId: '',
+      agreed: false
     },
   })
 
@@ -64,8 +66,6 @@ export default function RR() {
     fetchData()
   }, [])
 
-
-
   const [isDisabled, setDisabled] = useState(true)
 
   function onSubmit(values: z.infer<typeof formSchema>) {
@@ -73,23 +73,25 @@ export default function RR() {
     write?.()
   }
 
-  const { data: bundle, isError, isLoading: isReadCommitLoading } = useContractRead({
-    address: repoAddress as Address,
-    abi: abi,
-    functionName: 'contribute',
-    args: [
-      address,
-      form.getValues().contributeId,
-    ],
-  })
+  // const { data: bundle, isError, isLoading: isReadCommitLoading } = useContractRead({
+  //   address: repoAddress as Address,
+  //   abi: abi,
+  //   functionName: 'contributor',
+  //   args: [
+  //     address,
+  //     form.getValues().contributeId,
+  //   ],
+  //   enabled: form.getValues().contributeId.length !== 0
+  // })
 
-  useEffect(() => {
-    if (bundle) {
-      setCommit(bundle?.sha)
-    }
-  }, [isReadCommitLoading])
+  // useEffect(() => {
+  //   if (bundle) {
+  //     setCommit(bundle[1])
+  //   }
+  //   console.log(bundle)
 
-  console.log("bundle:", bundle)
+  // }, [isReadCommitLoading])
+
 
   // Prepare the contract
   const { config } = usePrepareContractWrite({
@@ -97,8 +99,8 @@ export default function RR() {
     abi: abi,
     functionName: 'rewardRequest',
     args: [
-      form.getValues().contributeId,
-      form.getValues().bountyId
+      Number(form.getValues().contributeId),
+      Number(form.getValues().bountyId)
     ],
   })
 
@@ -110,7 +112,7 @@ export default function RR() {
 
   useEffect(() => {
     if (isSuccess) {
-      router.push('/repo-list')
+      router.push(`/reward-request-list?address=${repoAddress}`)
     }
   }, [isSuccess])
 
@@ -150,7 +152,7 @@ export default function RR() {
                     />
                     <FormField
                       control={form.control}
-                      name="to"
+                      name="agreed"
                       render={({ field }) => (
                         <FormItem className="flex-1 pr-10">
                           <div className="flex flex-col">
@@ -175,17 +177,17 @@ export default function RR() {
                       )}
                     />
                   </div>
-                  {readCommit
+                  {/* {readCommit
                     ? <div className="flex flex-col">
                       <div className="text-1.5xl">
                         Prepare to merge
                       </div>
                       <div>
-                        readCommit
+                        {readCommit}
                       </div>
                     </div>
                     : null
-                  }
+                  } */}
                   <FormField
                     control={form.control}
                     name="bountyId"
@@ -200,7 +202,7 @@ export default function RR() {
                           </FormControl>
                           <SelectContent>
                             {bountyList.map((bounty, index) => (
-                              <SelectItem value={bounty.id.toString()}>{bounty.title}</SelectItem>
+                              <SelectItem value={String(bounty.id)}>{bounty.title}</SelectItem>
                             ))}
                           </SelectContent>
                         </Select>
@@ -211,7 +213,7 @@ export default function RR() {
                   <div className="flex flex-row justify-center">
                     <Button className="custom-cancel-btn mr-5" variant="outline">Cancel</Button>
                     <Button className="custom-send-btn ml-5" type="submit" disabled={isDisabled}>
-                      {isLoading ? 'Sending...' : 'Send Pull Request'}
+                      {isLoading ? 'Sending...' : 'Send Reward Request'}
                     </Button>
                   </div>
                 </form>
