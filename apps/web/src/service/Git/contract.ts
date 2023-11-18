@@ -135,6 +135,7 @@ export const getRewardRequestList = async (repoAddress:string) => {
 
       requestList.push(rr)
     }
-      return requestList
+    console.log(requestList)
+    return requestList
   }
 
