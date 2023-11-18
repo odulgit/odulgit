@@ -12,11 +12,11 @@
 - WebPage: [odulgit.net/odulgit/](https://odulgit.net/odulgit/)
 - Video: [https://youtu.be/](https://youtu.be/)
 - Contract Address:
-  - Sepolia Address
-  - Scroll Sepolia Address
-  - Chiado Testnet Address
-  - Aribitrum Stylus Address
-  - Polygon ZKEVM Address 
+  - Sepolia Address: https://sepolia.etherscan.io/address/0xC359132E29bf040aA546b4de51B06D6e4B772628#code
+  - Scroll Sepolia Address: https://sepolia.scrollscan.com/address/0xC359132E29bf040aA546b4de51B06D6e4B772628#code
+  - Chiado Testnet Address: https://gnosis-chiado.blockscout.com/address/0xC359132E29bf040aA546b4de51B06D6e4B772628#code
+  - Aribitrum Stylus Address: https://stylus-testnet-explorer.arbitrum.io/address/0xC359132E29bf040aA546b4de51B06D6e4B772628#code
+  - Polygon ZKEVM Address: https://testnet-zkevm.polygonscan.com/address/0xC359132E29bf040aA546b4de51B06D6e4B772628#code
 
 ### Abstract
 OdulGit is actually an on-chain dev-centric tool designed for developers. There’re 3 key elements of it.

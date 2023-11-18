@@ -39,8 +39,8 @@ contract Bounty {
         bountyOwner[bountyCount] = msg.sender;
         bountyAmount[bountyCount] = msg.value;
         bountyContent[bountyCount] = BountyContent(title, description, 1);
-        bountyCount++;
         bountyTotalAmount += bountyAmount[bountyCount];
+        bountyCount++;
         emit createBountyEvent(
             bountyCount,
             msg.sender,
@@ -59,7 +59,7 @@ contract Bounty {
 
         bountyContent[bountyId].openStatus = 0;
         bountyAmount[bountyId] = 0;
-        payable(contributor).transfer((amount * 9) / 10);
+        payable(contributor).transfer(amount);
         bountyTotalAmount -= amount;
 
         emit BountyGiven(bountyId, contributor, amount);
