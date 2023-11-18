@@ -9,6 +9,7 @@ import { downloadDir, uploadFile } from "../util/ipfs"
 import { upload } from "../storage/fileUpload"
 import { deal } from "../storage/fileDeal"
 import { lotusUpload } from "../storage/lotus"
+import { releaseToContract } from "../wallet/invoke"
 
 export const release = async (dto: {
   commit: string
@@ -54,15 +55,19 @@ export const release = async (dto: {
 
   console.log(file)
 
-  if (dto.type === "lighthouse") {
-    const { data: { Hash: hash } } = await upload(file)
-    console.log(`lighthouse: ${hash}`)
-  }
-  if (dto.type === "deal") {
-    await deal(file)
-  }
-  if (dto.type === "lotus") {
-    const cid = await uploadFile(fs.readFileSync(file))
-    await lotusUpload(cid)
+  if (dto.type) {
+    let cid = ""
+    if (dto.type === "lighthouse") {
+      cid = (await upload(file)).data.Hash
+      console.log(`lighthouse: ${cid}`)
+    }
+    if (dto.type === "deal") {
+      cid = await deal(file)
+    }
+    if (dto.type === "lotus") {
+      cid = await uploadFile(fs.readFileSync(file))
+      await lotusUpload(cid)
+    }
+    await releaseToContract(repository, dto.tag, cid, dto.commit)
   }
 }

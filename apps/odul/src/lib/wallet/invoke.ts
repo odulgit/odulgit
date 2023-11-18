@@ -66,3 +66,16 @@ export const mergeToContract = async (repoAddr: string, commit: Commit, contribu
     throw e
   }
 }
+
+export const releaseToContract = async (repoAddr: string, name: string, cid: string, commit: string) => {
+  const repo = await getGitContract(repoAddr)
+
+  try {
+    await repo.release(name, cid, utils.arrayify(commit))
+  } catch (e: any) {
+    if (e?.error?.reason) {
+      throw new Error(e?.error?.reason)
+    }
+    throw e
+  }
+}
