@@ -2,15 +2,13 @@ import fs from "node:fs"
 import { reset } from "../git/reset"
 import { fetch } from "./fetch"
 import { setRepoAddress } from "../git/remote"
+import { getGitContract } from "../wallet/contract"
 
 export const clone = async (dto: {
   repository: string
   directory?: string
 }) => {
-  // TODO: get repo and branch from contract
-  const repo = dto.repository
-
-  const dir = dto.directory || repo
+  const dir = dto.directory || (await (await getGitContract(dto.repository, true)).repo()).name
   const gitDir = `${dir}/.git`
 
   if (fs.existsSync(gitDir)) {
