@@ -6,7 +6,6 @@ task("deploy:file", "Deploy git")
   .setAction(async ({ verify }, hre) => {
     await hre.run("compile")
     const [signer]: any = await hre.ethers.getSigners()
-
     const feeData = await hre.ethers.provider.getFeeData()
     const contractFactory = await hre.ethers.getContractFactory("contracts/DealClient.sol:DealClient")
     const deployContract: any = await contractFactory.connect(signer).deploy()

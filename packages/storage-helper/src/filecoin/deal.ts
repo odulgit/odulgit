@@ -2,7 +2,7 @@ import { ethers } from "ethers"
 import CID from "cids"
 
 export const dealClient = async (taskArgs: any, network: any) => {
-  const cid = taskArgs.pieceCid
+  const cid = taskArgs.pieceCid // The address of the DealRewarder contract
   const cidHexRaw = new CID(cid).toString("base16").substring(1)
   const cidHex = `0x${cidHexRaw}`
   const contractAddr = taskArgs.contract
