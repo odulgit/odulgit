@@ -40,9 +40,9 @@ export const merge = async (dto: {
   fs.writeFileSync(`${process.cwd()}/.git/refs/remotes/odul/${mainBranch}`, `${head}\n`)
   fs.writeFileSync(`${process.cwd()}/.git/refs/remotes/odul/HEAD`, `${head}\n`)
   const commit = await catCommit(head)
-  const [contributer, contributeId] = dto.branch.split("/")
+  const [contributor, contributeId] = dto.branch.split("/")
 
-  await mergeToContract(repository, commit, contributer, contributeId, cid)
+  await mergeToContract(repository, commit, contributor, contributeId, cid)
 
-  await sendNotify(contributer, "5c2cc8c3-3e06-4d71-b7ac-011d2beff331", "Your contribute is merged", "Your contribute is merged")
+  await sendNotify(contributor, "5c2cc8c3-3e06-4d71-b7ac-011d2beff331", "Your contribute is merged", "Your contribute is merged")
 }
