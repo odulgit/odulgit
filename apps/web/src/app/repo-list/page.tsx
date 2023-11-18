@@ -73,17 +73,17 @@ export default function RepoList() {
                       }
                     </div>
                     <div className='flex flex-1 flex-row items-center justify-end'>
-                      <div className="text-xl font-roboto-bold">
+                      <div className="flex text-xl font-roboto-bold items-center">
                         <Badge variant="default">
                           <img src="./Icon-value.svg" alt="Value Icon" className='mr-1' />
                           {repo.totalBounty}
                         </Badge>
+                        <Button variant="ghost" size="icon">
+                          <img src="./Icon-external-link.svg" alt="More Icon" onClick={() => (
+                            handleRepoClick(repo.address)
+                          )} />
+                        </Button>
                       </div>
-                      <Button variant="ghost" size="icon">
-                        <img src="./Icon-dot-more.svg" alt="More Icon" onClick={() => (
-                          handleRepoClick(repo.address)
-                        )} />
-                      </Button>
                     </div>
                   </div>
                   <div className="flex flex-row py-3">
