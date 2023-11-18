@@ -12,6 +12,11 @@ const inter = Inter({ subsets: ['latin'] })
 export const metadata: Metadata = {
   title: 'OdulGit',
   description: 'Welcome to OdulGit',
+  icons: {
+    icon: [
+      '/odulgit/Odulgit-Logo.png'
+    ]
+  }
 }
 
 export default function RootLayout({
