@@ -9,7 +9,6 @@ type ConfigType = DeepPartial<{
   ethereum: {
     networkUrl: string
     contract: string
-    chainId: string
   }
   ipfs: {
     bootstrap: {

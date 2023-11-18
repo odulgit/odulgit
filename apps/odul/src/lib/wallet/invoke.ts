@@ -67,11 +67,11 @@ export const mergeToContract = async (repoAddr: string, commit: Commit, contribu
   }
 }
 
-export const releaseToContract = async (repoAddr: string, name: string, cid: string, commit: string) => {
+export const releaseToContract = async (repoAddr: string, commit: string, name: string, cid: string) => {
   const repo = await getGitContract(repoAddr)
 
   try {
-    await repo.release(name, cid, utils.arrayify(commit))
+    await repo.release(utils.arrayify(commit), name, cid)
   } catch (e: any) {
     if (e?.error?.reason) {
       throw new Error(e?.error?.reason)

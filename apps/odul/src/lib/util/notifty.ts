@@ -8,7 +8,7 @@ export const sendNotify = async (address: string, type: string, title: string, b
       body,
     },
     accounts: [
-      `eip155:${getConfig().ethereum?.chainId}:${address}`,
+      `eip155:1:${address}`,
     ],
   }
   if (icon) {
