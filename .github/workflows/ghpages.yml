@@ -59,6 +59,7 @@ jobs:
         with:
           path: apps/web/out
 
+  # Deploy to GitHub Pages
   deploy:
     environment:
       name: github-pages
