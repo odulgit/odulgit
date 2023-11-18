@@ -13,14 +13,10 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip"
-import { useMessages, useSubscription, useW3iAccount } from "@web3inbox/widget-react";
 
 export default function RRList() {
   const router = useRouter();
 
-  const { account } = useW3iAccount();
-  const { messages } = useMessages(account);
-  const { subscription } = useSubscription(account);
   const [rewardList, setRewardList] = useState<any[]>([])
   const searchParams = useSearchParams()
   const repoAddress = searchParams.get('address') ?? ''
@@ -109,20 +105,6 @@ export default function RRList() {
                         </Tooltip>
                         <div className="flex-1 ml-1">{request.contributor}</div>
                       </div>
-                    </div>
-                    {/* <div className="flex flex-row py-3">
-                    <div className="flex-1">
-                      Link Bounty: {Number(request.linkBounty)}
-                    </div>
-                  </div> */}
-                    <div className="flex flex-col space-y-2">
-                      {messages.map(({ id, message }) => (
-                        <div className="flex flex-row space-x-2">
-                          <div className="text-purple-400 text-xl font-roboto-bold">
-                            {message.title} - {message.body}
-                          </div>
-                        </div>
-                      ))}
                     </div>
                   </CommContainer>
                 ))}
