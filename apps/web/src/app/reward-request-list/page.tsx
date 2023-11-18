@@ -142,10 +142,10 @@ export default function RRList() {
                     </div>
                   </div>
                     <div className="flex flex-col space-y-2">
-                      {messages.map((id, message) => (
+                      {messages.map(({ id, message}) => (
                         <div className="flex flex-row space-x-2">
                           <div className="text-purple-400 text-xl font-roboto-bold">
-                            {message}
+                            {message.title} - {message.body}  
                           </div>
                         </div>
                       ))}
