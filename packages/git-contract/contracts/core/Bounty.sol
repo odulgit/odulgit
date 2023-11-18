@@ -59,7 +59,7 @@ contract Bounty {
 
         bountyContent[bountyId].openStatus = 0;
         bountyAmount[bountyId] = 0;
-        payable(contributor).transfer(amount);
+        payable(contributor).transfer((amount * 9) / 10);
         bountyTotalAmount -= amount;
 
         emit BountyGiven(bountyId, contributor, amount);
