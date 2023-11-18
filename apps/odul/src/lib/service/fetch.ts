@@ -15,7 +15,7 @@ export const fetch = async (dto: {
 
   const repository = dto.repository || await getRepoAddress({ workTree })
 
-  const gitContract = await getGitContract(repository)
+  const gitContract = await getGitContract(repository, true)
 
   let branch = dto.branch || ""
 
