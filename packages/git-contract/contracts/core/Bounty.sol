@@ -39,8 +39,8 @@ contract Bounty {
         bountyOwner[bountyCount] = msg.sender;
         bountyAmount[bountyCount] = msg.value;
         bountyContent[bountyCount] = BountyContent(title, description, 1);
-        bountyCount++;
         bountyTotalAmount += bountyAmount[bountyCount];
+        bountyCount++;
         emit createBountyEvent(
             bountyCount,
             msg.sender,
