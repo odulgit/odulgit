@@ -1,171 +1,185 @@
-'use client'
+"use client";
+import { useState } from "react";
+import CommContainer from "@/components/common-container";
+import Container from "@/components/ui/container";
+import { Button } from "@/components/ui/button";
+import * as React from "react";
+import { useRouter } from "next/navigation";
+import { Badge } from "@/components/ui/badge";
 
-import * as React from "react"
-import Container from '@/components/ui/container';
-import { Button } from '@/components/ui/button'
-import { useState } from 'react'
-import * as z from "zod"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form" 
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form"
-import { CalendarIcon } from "@radix-ui/react-icons"
-import { format } from "date-fns"
-import { cn } from "@/lib/utils"
-import { Calendar } from "@/components/ui/calendar"
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover"
+export default function IssueList() {
+  const router = useRouter();
 
-import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
-
-export default function Issues() {
-
-  const [newDisscussion, setTotalBounty] = useState('Disscussion #')
-  const formSchema = z.object({
-    title: z.string(),
-    description: z.string(),
-    bounty: z.string(),
-    deadline: z.date(),
-    markdown: z.string(),
-  })
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      title: '',
-      description: '',
-      bounty: '',
-      markdown: '',
+  const mockIssueList = [
+    {
+      cid: "1",
+      hash: "hash1",
+      name: "yt-liyt",
+      owner: "yt-liyt",
+      description:
+        "Description for trending repo 1.See what the GitHub community is most excited about today.",
+      contract: "repo1",
+      status: "OPEN",
+      bounty: 80,
+      stars: 25178,
+      forks: 56,
+      issues: 0,
+      merged: 0,
+      updatedTime: "1699546283019",
     },
-  })
- 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values)
-  }
+    {
+      cid: "2",
+      hash: "hash2",
+      name: "Crafttool",
+      owner: "freepik-ai",
+      description:
+        "Description for trending repo 2.See what the GitHub community is most excited about today.",
+      contract: "repo2",
+      status: "OPEN",
+      bounty: 50,
+      stars: 1902,
+      forks: 30,
+      issues: 0,
+      merged: 0,
+      updatedTime: "1699546283019",
+    },
+    {
+      cid: "3",
+      hash: "hash3",
+      name: "jenkins-nix-ci",
+      owner: "yt-liyt",
+      description:
+        "Description for trending repo 3.See what the GitHub community is most excited about today.",
+      contract: "repo3",
+      status: "OPEN",
+      bounty: 20,
+      stars: 290,
+      forks: 20,
+      issues: 0,
+      merged: 0,
+      updatedTime: "1699546283019",
+    },
+    {
+      cid: "4",
+      hash: "hash4",
+      name: "presto-ui",
+      owner: "yt-liyt",
+      description:
+        "Description for trending repo 4.See what the GitHub community is most excited about today.",
+      contract: "repo4",
+      status: "OPEN",
+      bounty: 20,
+      stars: 102,
+      forks: 10,
+      issues: 0,
+      merged: 0,
+      updatedTime: "1699546283019",
+    },
+    {
+      cid: "5",
+      hash: "hash5",
+      name: "web3modal-cli",
+      owner: "yt-liyt",
+      description:
+        "Description for trending repo 4.See what the GitHub community is most excited about today.",
+      contract: "repo4",
+      status: "OPEN",
+      bounty: 10,
+      stars: 82,
+      forks: 1,
+      issues: 0,
+      merged: 0,
+      updatedTime: "1699546283019",
+    },
+  ];
+
+  const [issueList, setIssueList] = useState(mockIssueList);
+
   return (
-    <main className='background'
-      style={{
-        minHeight: `100vh`,
-      }}>
+    <main className="background min-h-screen">
       <Container>
-        <div className='flex flex-col'>
-          <div className='m-24'>
-            <div className='text-2xl mb-5 font-roboto-bold'>
-              {newDisscussion}
+        <div className="flex flex-col">
+          <div className="mt-24 mx-24">
+            <div className="flex flex-row justify-between">
+              <div className="flex-row text-2xl font-roboto-bold">Issues</div>
+              <Button
+                className="custom-create-issue-btn"
+                onClick={() => router.push("/issues/create-issue")}
+              >
+                Create New Issue
+              </Button>
             </div>
-            <div className='flex flex-row issue-background'>
-              <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)} className="m-5 space-y-8 w-full">
-                  <FormField
-                    control={form.control}
-                    name="title"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className='text-1.5xl'>Title of the discussion</FormLabel>
-                        <FormControl>
-                          <Input className="custom-input" placeholder="Type the discussion title here.." {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="description"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className='text-1.5xl'>Description of the discussion</FormLabel>
-                        <FormControl>
-                          <Input className="custom-input" placeholder="Type description here.." {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <div className="flex flex-row justify-between">
-                    <FormField
-                      control={form.control}
-                      name="bounty"
-                      render={({ field }) => (
-                        <FormItem className="w-6/12 pr-10">
-                          <FormLabel className="text-1.5xl">Issue Bounty</FormLabel>
-                          <FormControl>
-                            <div className='rt-input-input'>
-                              <Input className="custom-input" placeholder="Set a bounty" {...field} />
-                            </div>
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={form.control}
-                      name="deadline"
-                      render={({ field }) => (
-                        <FormItem className="flex flex-col w-6/12">
-                          <FormLabel className="text-1.5xl">Deadline</FormLabel>
-                          <Popover>
-                            <PopoverTrigger asChild>
-                              <FormControl>
-                                <Button
-                                  variant={"outline"}
-                                  className={cn(
-                                    "w-auto pl-3 text-left font-normal custom-input",
-                                    !field.value && "text-muted-foreground"
-                                  )}
-                                >
-                                  {field.value ? (
-                                    format(field.value, "PPP")
-                                  ) : (
-                                    <span>Enter a date</span>
-                                  )}
-                                  <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                                </Button>
-                              </FormControl>
-                            </PopoverTrigger>
-                            <PopoverContent className="w-auto p-0" align="start">
-                              <Calendar
-                                mode="single"
-                                selected={field.value}
-                                onSelect={field.onChange}
-                                disabled={(date) => date < new Date()}
-                                initialFocus
-                              />
-                            </PopoverContent>
-                          </Popover>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
+
+            <div className="flex flex-col mt-4 space-y-6">
+              {issueList.map((issue, index) => (
+                <CommContainer className="p-6 custom-container">
+                  <div className="flex items-center">
+                    <div className="w-full flex flex-row justify-between">
+                      <div className="flex flex-row space-x-2">
+                        <img src="./Icon-repo.svg" alt="Repo Icon" />
+                        <div className=" text-purple-400 text-xl font-roboto-bold">
+                          Repository {issue.cid} - {issue.owner} /
+                        </div>
+                        <div className="text-xl font-roboto-bold">
+                          {issue.name}
+                        </div>
+
+                        <Button variant="ghost" size="icon">
+                          <img src="./Icon-copy.svg" alt="Copy Icon" />
+                        </Button>
+                      </div>
+
+                      <div className='flex flex-1 flex-row items-center justify-end'>
+                        <div className="text-xl font-roboto-bold mr-4">
+                          <Badge variant="default">
+                            <img src="./Icon-value.svg" alt="Value Icon" className='mr-1' />
+                            {issue.bounty}
+                          </Badge>
+                        </div>
+                        <Button variant="ghost" size="icon">
+                          <img src="./Icon-dot-more.svg" alt="More Icon" />
+                        </Button>
+                      </div>
+                    </div>
                   </div>
-                  <FormField
-                    control={form.control}
-                    name="markdown"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className='text-1.5xl'>Markdown Editor</FormLabel>
-                        <FormControl>
-                          <Textarea className="custom-input" placeholder="Write your markdown here.." {...field}/>
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <div className="flex flex-row justify-center">
-                    <Button className="custom-cancel-btn mr-5" variant="outline">Cancel</Button>
-                    <Button className="custom-send-btn ml-5" type="submit">Send</Button>
+                  <div className="flex flex-row py-3">
+                    <div className="flex-1">{issue.description}</div>
                   </div>
-                </form>
-              </Form>
+                  <hr className="custom-container-hr my-3" />
+                  <div className="flex flex-row mt-3 items-center space-x-6">
+                    <div className="flex flex-row">
+                      <img src="./Icon-fav.svg" alt="Star Icon" />
+                      <div className="flex-1 ml-1">
+                        {issue.stars.toString()}
+                      </div>
+                    </div>
+                    <div className="flex flex-row">
+                      <img src="./Icon-forks.svg" alt="Forks Icon" />
+                      <div className="flex-1 ml-1">
+                        {issue.forks.toString()}
+                      </div>
+                    </div>
+                    <div className="flex flex-row">
+                      <img src="./Icon-issues.svg" alt="Issues Icon" />
+                      <div className="flex-1 ml-1">
+                        {issue.issues.toString()}
+                      </div>
+                    </div>
+                    <div className="flex flex-row">
+                      <img src="./Icon-pull.svg" alt="Pull Icon" />
+                      <div className="flex-1 ml-1">
+                        {issue.merged.toString()}
+                      </div>
+                    </div>
+                  </div>
+                  {/* <hr className="custom-container-hr my-3"/>
+                  <div className="flex flex-row">
+                    <StarIcon width="20" height="20"/>
+
+                    <Share1Icon width="20" height="20"/>
+                  </div> */}
+                </CommContainer>
+              ))}
             </div>
           </div>
         </div>
