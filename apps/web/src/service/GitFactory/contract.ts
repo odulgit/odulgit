@@ -6,7 +6,8 @@ import { getRepo, RepoData } from '@/service/Git/contract';
 import { publicClients } from '@/service/client'
 
 export const gitFactoryAddress: any = {
-  'Goerli': process.env.NEXT_PUBLIC_GIT_FATCOTRY_GOERLI_CONTRACT
+  'Goerli': process.env.NEXT_PUBLIC_GIT_FACTORY_GOERLI_CONTRACT,
+  'Sepolia': process.env.NEXT_PUBLIC_GIT_FACTORY_SEPOLIA_CONTRACT
 }
 
 export const getRepoCount = async () => {

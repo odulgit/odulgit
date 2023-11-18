@@ -4,7 +4,7 @@ import CommContainer from '@/components/common-container';
 import Container from '@/components/ui/container';
 import { Button } from '@/components/ui/button';
 import * as React from "react"
-import { useRouter, useParams } from 'next/navigation';
+import { useRouter, useParams, useSearchParams } from 'next/navigation';
 import { getRewardRequestList } from "@/service/Git/contract";
 
 
@@ -12,6 +12,7 @@ export default function RRList() {
   const router = useRouter();
   const params = useParams()
   const [rewardList, setRewardList] = useState([])
+  const searchParams = useSearchParams()
 
   const mockRepoList = [
     {
@@ -95,7 +96,8 @@ export default function RRList() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const rewardRequest = await getRewardRequestList(params.repoAddress)
+      const repoAddress = searchParams.get('address') ?? ''
+      const rewardRequest = await getRewardRequestList(repoAddress)
       setRewardList(rewardList)
     }
     fetchData()

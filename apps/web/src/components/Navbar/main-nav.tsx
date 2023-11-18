@@ -20,7 +20,7 @@ const MainNav = () => {
     const routes = [
         {
             href: "/home",
-            label: "Odulgit",
+            label: "OdulGit",
         },
         {
             href: "/repos",

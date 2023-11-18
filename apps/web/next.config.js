@@ -1,6 +1,7 @@
 module.exports = {
   output:"export",
   reactStrictMode: true,
+  assetPrefix: './',
   images: {
     unoptimized: true
   },
