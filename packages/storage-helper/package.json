@@ -5,6 +5,7 @@
   "main": "dist/src/index.js",
   "scripts": {
     "build": "tsc",
+    "dev": "nodemon -w src -e ts --exec pnpm build",
     "ipfs": "sh ./scripts/ipfs/start.sh",
     "deploy:test": "hardhat deploy --network calibration",
     "deploy:file": "hardhat deploy:file --network calibration",
@@ -30,6 +31,7 @@
     "eslint-config-custom": "workspace:*",
     "hardhat": "2.18.1",
     "hardhat-deploy": "^0.9.29",
+    "nodemon": "3.0.1",
     "ts-node": "^10.9.1",
     "tsconfig": "workspace:*",
     "typescript": "5.2.2"
