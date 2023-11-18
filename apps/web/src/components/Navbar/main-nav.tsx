@@ -10,6 +10,7 @@ import {
     useWeb3ModalState,
 } from '@web3modal/wagmi/react'
 import { useAccount } from 'wagmi'
+import Image from 'next/image'
 
 const MainNav = () => {
     const { address, isConnected } = useAccount()
@@ -34,7 +35,13 @@ const MainNav = () => {
                 <div className="relative flex h-12 items-center justify-between">
                     <div className="flex items-center">
                         <Link href="/home" className="ml-4 lg:ml-0">
-                            LOGO
+                            <Image
+                                alt='OdulGit'
+                                src='Odulgit-Logo.png'
+                                width={48}
+                                height={48}
+                                className='w-12 h-12'
+                            />
                         </Link>
                     </div>
                     <nav className="mx-5 flex flex-1 items-center space-x-4 lg:space-x-6 hidden md:block border-b">

@@ -17,6 +17,7 @@ import { useCallback, useEffect } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import { useRouter } from "next/navigation";
 import { formatString } from "../../lib/utils";
+import Image from 'next/image'
 
 const projectId = process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID as string;
 const SubNav = () => {
@@ -100,7 +101,7 @@ const SubNav = () => {
   }, [unsubscribe, isSubscribed]);
 
   const handleToast = (message: any) => {
-    const pushRepoAddress = JSON.parse(message.body).repo;
+    const pushRepoAddress = JSON.parse(message.body).repo
     toast({
       title: message.title,
       description: `Repository Address: ${formatString(pushRepoAddress, 10)}`,
@@ -144,7 +145,13 @@ const SubNav = () => {
         <div className="relative flex h-12 items-center justify-between">
           <div className="flex items-center">
             <Link href="/home" className="ml-4 lg:ml-0">
-              LOGO
+              <Image
+                alt='OdulGit'
+                src='Odulgit-Logo.png'
+                width={48}
+                height={48}
+                className='w-12 h-12'
+              />
             </Link>
           </div>
           <nav className="mx-5 flex flex-1 items-center space-x-4 lg:space-x-6 hidden md:block border-b">
@@ -162,9 +169,9 @@ const SubNav = () => {
           </nav>
           <div className="flex items-center">
             {isW3iInitialized &&
-            !isSubscribed &&
-            !isSubscribing &&
-            !isUnsubscribing ? (
+              !isSubscribed &&
+              !isSubscribing &&
+              !isUnsubscribing ? (
               <Button variant="wallet" onClick={handleSubscribe}>
                 Subscribe
               </Button>
