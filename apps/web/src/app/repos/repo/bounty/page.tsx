@@ -4,14 +4,18 @@ import CommContainer from "@/components/common-container";
 import Container from "@/components/ui/container";
 import { Button } from "@/components/ui/button";
 import * as React from "react";
-import { useRouter, useParams } from "next/navigation";
+import { useRouter, useParams, useSearchParams } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
-import { getBountyList } from '@/service/Git/contract'
+import { BountyData, getBountyList } from '@/service/Git/contract'
 
 export default function BountyList() {
   const router = useRouter();
-  const [bountyList, setBountyList] = useState([])
+  const [bountyList, setBountyList] = useState<BountyData[]>([])
   const params = useParams()
+
+  const searchParams = useSearchParams()
+
+
   const mockIssueList = [
     {
       cid: "1",
@@ -98,9 +102,8 @@ export default function BountyList() {
   const [issueList, setIssueList] = useState(mockIssueList);
   useEffect(() => {
     const fetchData = async () => {
-      console.log(params.repoAddress)
-      const bounties = await getBountyList(params.repoAddress)
-      console.log(bounties)
+      const repoAddress = searchParams.get('address') ?? ''
+      const bounties: BountyData[] = await getBountyList(repoAddress)
       setBountyList(bounties)
     }
     fetchData()
@@ -128,10 +131,10 @@ export default function BountyList() {
                       <div className="flex flex-row space-x-2">
                         <img src="./Icon-repo.svg" alt="Repo Icon" />
                         <div className=" text-purple-400 text-xl font-roboto-bold">
-                          Bounty {bounty.cid} - {bounty.owner} /
+                          Bounty {bounty.id} /
                         </div>
                         <div className="text-xl font-roboto-bold">
-                          {bounty.name}
+                          {bounty.title}
                         </div>
 
                         <Button variant="ghost" size="icon">
@@ -141,10 +144,10 @@ export default function BountyList() {
 
                       <div className='flex flex-1 flex-row items-center justify-end'>
                         <div className="text-xl font-roboto-bold">
-                          <Badge variant="default">
+                          {/* <Badge variant="default">
                             <img src="./Icon-value.svg" alt="Value Icon" className='mr-1' />
                             {bounty.bounty}
-                          </Badge>
+                          </Badge> */}
                         </div>
                         <Button variant="ghost" size="icon">
                           <img src="./Icon-dot-more.svg" alt="More Icon" />
@@ -156,38 +159,6 @@ export default function BountyList() {
                     <div className="flex-1">{bounty.description}</div>
                   </div>
                   <hr className="custom-container-hr my-3" />
-                  <div className="flex flex-row mt-3 items-center space-x-6">
-                    <div className="flex flex-row">
-                      <img src="./Icon-fav.svg" alt="Star Icon" />
-                      <div className="flex-1 ml-1">
-                        {bounty.stars.toString()}
-                      </div>
-                    </div>
-                    <div className="flex flex-row">
-                      <img src="./Icon-forks.svg" alt="Forks Icon" />
-                      <div className="flex-1 ml-1">
-                        {bounty.forks.toString()}
-                      </div>
-                    </div>
-                    <div className="flex flex-row">
-                      <img src="./Icon-issues.svg" alt="Issues Icon" />
-                      <div className="flex-1 ml-1">
-                        {bounty.issues.toString()}
-                      </div>
-                    </div>
-                    <div className="flex flex-row">
-                      <img src="./Icon-pull.svg" alt="Pull Icon" />
-                      <div className="flex-1 ml-1">
-                        {bounty.merged.toString()}
-                      </div>
-                    </div>
-                  </div>
-                  {/* <hr className="custom-container-hr my-3"/>
-                  <div className="flex flex-row">
-                    <StarIcon width="20" height="20"/>
-
-                    <Share1Icon width="20" height="20"/>
-                  </div> */}
                 </CommContainer>
               ))}
             </div>

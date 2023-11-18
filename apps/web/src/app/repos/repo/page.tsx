@@ -1,7 +1,6 @@
 'use client'
 import Image from 'next/image'
 import { useState, useEffect } from "react";
-import { useRouter } from 'next/router';
 import CommContainer from '@/components/common-container';
 import Container from '@/components/ui/container';
 import { Button } from '@/components/ui/button';
@@ -10,8 +9,9 @@ import { File, Folder } from "lucide-react";
 import * as React from "react"
 import useResizeObserver from "use-resize-observer";
 import { FC } from 'react';
-import { getRepo } from '@/service/Git/contract'
-
+import { getRepo, RepoData } from '@/service/Git/contract'
+import { getRepoList } from '@/service/GitFactory/contract'
+import { useSearchParams } from 'next/navigation'
 
 export default function Page({ params }: { params: { repoAddress: string } }) {
     const [repoIndex, setRepoIndex] = useState(1)
@@ -19,11 +19,14 @@ export default function Page({ params }: { params: { repoAddress: string } }) {
     const [repoName, setRepoName] = useState('yt-liyt')
     const [issueAmount, setIssueAmount] = useState(204)
     const [bountyAmount, setBountyAmount] = useState(6800)
-    const [repo, setRepo] = useState()
+    const [repo, setRepo] = useState<RepoData>()
+
+    const searchParams = useSearchParams()
 
     useEffect(() => {
         const fetchData = async () => {
-            const repo = await getRepo(params.repoAddress)
+            const repoAddress = searchParams.get('address') ?? ''
+            const repo: RepoData = await getRepo(repoAddress)
             setRepo(repo)
         }
         fetchData()
