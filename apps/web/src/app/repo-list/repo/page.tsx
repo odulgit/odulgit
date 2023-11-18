@@ -5,12 +5,11 @@ import CommContainer from "@/components/common-container";
 import Container from "@/components/ui/container";
 import { Button } from "@/components/ui/button";
 import * as React from "react";
-import useResizeObserver from "use-resize-observer";
 import { getRepo, RepoData } from "@/service/Git/contract";
 import { useSearchParams } from "next/navigation";
 import { useToast } from "@/components/ui/use-toast";
 import { formatString } from "../../../lib/utils";
-import { Input } from "@/components/ui/input"
+import { Input } from "@/components/ui/input";
 
 export default function Page({ params }: { params: { repoAddress: string } }) {
   const [issueAmount, setIssueAmount] = useState(204);
@@ -23,13 +22,13 @@ export default function Page({ params }: { params: { repoAddress: string } }) {
   const searchParams = useSearchParams();
 
   const handleCopyText = (textToCopy?: string) => {
-    if(textToCopy){
+    if (textToCopy) {
       navigator.clipboard.writeText(textToCopy).then(() => {
         setCopied(true);
         setTimeout(() => {
           setCopied(false);
         }, 1000);
-      });  
+      });
     }
     toast({
       title: "Repository Copied!",
@@ -38,13 +37,13 @@ export default function Page({ params }: { params: { repoAddress: string } }) {
   };
 
   const handleURL = (textToCopy?: string) => {
-    if(textToCopy){
+    if (textToCopy) {
       navigator.clipboard.writeText(textToCopy).then(() => {
         setURLCopied(true);
         setTimeout(() => {
           setURLCopied(false);
         }, 1000);
-      });  
+      });
     }
     toast({
       title: "Repository URL Copied!",
@@ -77,7 +76,9 @@ export default function Page({ params }: { params: { repoAddress: string } }) {
                 <div className="text-purple-400 text-2xl font-roboto-bold">
                   Repository {repo?.name} /
                 </div>
-                <div className="text-2xl font-roboto-bold">{formatString(repo?.address as string, 8)}</div>
+                <div className="text-2xl font-roboto-bold">
+                  {formatString(repo?.address as string, 8)}
+                </div>
                 <div className="">
                   <Button
                     variant="ghost"
@@ -102,15 +103,30 @@ export default function Page({ params }: { params: { repoAddress: string } }) {
               <div className="text-2xl font-roboto-bold">Description</div>
               <CommContainer>
                 <div className="flex flex-row px-6 py-3">
-                    <div className="flex-1">
-                        Description for trending repo 1.See what the GitHub community is most excited about today.
-                        Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
-                    </div>
-                    <div>
-                      <Button variant="ghost" size="icon" onClick={() => { handleContinued() }}>
-                        <img src="../Icon-edit.svg" alt="Edit Icon" />
-                      </Button>
-                    </div>
+                  <div className="flex-1">
+                    Description for trending repo 1.See what the GitHub
+                    community is most excited about today. Lorem Ipsum has been
+                    the industry's standard dummy text ever since the 1500s,
+                    when an unknown printer took a galley of type and scrambled
+                    it to make a type specimen book. It has survived not only
+                    five centuries, but also the leap into electronic
+                    typesetting, remaining essentially unchanged. It was
+                    popularised in the 1960s with the release of Letraset sheets
+                    containing Lorem Ipsum passages, and more recently with
+                    desktop publishing software like Aldus PageMaker including
+                    versions of Lorem Ipsum.
+                  </div>
+                  <div>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => {
+                        handleContinued();
+                      }}
+                    >
+                      <img src="../Icon-edit.svg" alt="Edit Icon" />
+                    </Button>
+                  </div>
                 </div>
               </CommContainer>
             </div>
@@ -120,19 +136,25 @@ export default function Page({ params }: { params: { repoAddress: string } }) {
                 <div className="text-2xl font-roboto-bold">Dashboard</div>
                 <div className="flex flex-row space-x-5">
                   <CommContainer>
-                    <div className="flex flex-col px-6 py-4">
+                    <div className="flex flex-col px-6 py-4 h-48">
                       <div className="flex flex-row mb-3 space-x-2">
                         <img src="../Icon-repo.svg" alt="Repo Icon" />
                         <div>Repositories URL</div>
                       </div>
                       <div className="w-full flex flex-row">
-                        <Input disabled className="custom-input" value={`https://odulgit.net/odulgit/repo-list/repo?address=${repo?.address}`} />
+                        <Input
+                          disabled
+                          className="custom-input"
+                          value={`https://odulgit.net/odulgit/repo-list/repo?address=${repo?.address}`}
+                        />
                         <Button
                           variant="ghost"
                           size="icon"
                           onClick={() => {
                             if (!urlCopied) {
-                              handleURL(`https://odulgit.net/odulgit/repo-list/repo?address=${repo?.address}`);
+                              handleURL(
+                                `https://odulgit.net/odulgit/repo-list/repo?address=${repo?.address}`
+                              );
                             }
                           }}
                         >
@@ -143,13 +165,15 @@ export default function Page({ params }: { params: { repoAddress: string } }) {
                           )}
                         </Button>
                       </div>
-                      <div className="flex justify-end mt-7">
-                        <Button onClick={() => handleContinued()}>View All</Button>
+                      <div className="flex h-full items-end justify-end mt-4 pb-4">
+                        <Button onClick={() => handleContinued()}>
+                          View All
+                        </Button>
                       </div>
                     </div>
                   </CommContainer>
                   <CommContainer>
-                    <div className="flex flex-col px-6 py-4">
+                    <div className="flex flex-col px-6 py-4  h-48">
                       <div className="flex flex-row mb-3 space-x-2">
                         <img src="../Icon-issues.svg" alt="Issue Icon" />
                         <div>Issues Total Amount</div>
@@ -164,20 +188,24 @@ export default function Page({ params }: { params: { repoAddress: string } }) {
                           {bountyAmount}
                         </div>
                       </div>
-                      <div className="flex justify-end mt-4">
-                        <Button onClick={() => handleContinued()}>View All</Button>
+                      <div className="flex h-full items-end justify-end mt-4 pb-4">
+                        <Button onClick={() => handleContinued()}>
+                          View All
+                        </Button>
                       </div>
                     </div>
                   </CommContainer>
                   <CommContainer>
-                    <div className="flex flex-col px-6 py-4">
+                    <div className="flex flex-col px-6 py-4 h-48">
                       <div className="flex flex-row mb-3 space-x-2">
                         <img src="../Icon-pull.svg" alt="Pull Icon" />
                         <div>Pull Requests</div>
                       </div>
                       <div className="flex justify-end mt-3">4 Pending</div>
-                      <div className="flex justify-end mt-4">
-                        <Button onClick={() => handleContinued()}>View All</Button>
+                      <div className="flex h-full items-end justify-end mt-4 pb-4">
+                        <Button onClick={() => handleContinued()}>
+                          View All
+                        </Button>
                       </div>
                     </div>
                   </CommContainer>
