@@ -37,7 +37,7 @@ const MainNav = () => {
                         <Link href="/home" className="ml-4 lg:ml-0">
                             <Image
                                 alt='OdulGit'
-                                src='Odulgit-Logo.png'
+                                src='/odulgit/Odulgit-Logo.png'
                                 width={48}
                                 height={48}
                                 className='w-12 h-12'
