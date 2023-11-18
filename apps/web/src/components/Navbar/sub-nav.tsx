@@ -18,15 +18,6 @@ const SubNav = () => {
     const repoAddress = searchParams.get('address') ?? ''
 
     const { address, isConnected } = useAccount()
-    const pathname = usePathname()
-    const regex = /^(\/repos\/repo\/0x[0-9a-fA-F]+)/;
-    const match = pathname.match(regex);
-    let repo = "";
-    if (match) {
-        repo = match[1];
-    } else {
-        console.log("No match found");
-    }
 
     const router = useRouter()
     const modal = useWeb3Modal()
@@ -41,11 +32,11 @@ const SubNav = () => {
             label: "Repositories",
         },
         {
-            href: `${repo}/bounty-list?address=${repoAddress}`,
+            href: `/bounty-list?address=${repoAddress}`,
             label: "Bounty",
         },
         {
-            href: `${repo}/reward-request-list?address=${repoAddress}`,
+            href: `/reward-request-list?address=${repoAddress}`,
             label: "Reward Requests",
         },
     ];

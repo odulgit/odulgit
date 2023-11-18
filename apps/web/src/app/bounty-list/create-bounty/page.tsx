@@ -30,6 +30,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { useRouter, useSearchParams } from 'next/navigation';
 import { usePrepareContractWrite, useContractWrite, useWaitForTransaction } from 'wagmi'
 import { abi } from '@/service/Git/abi'
+import { parseEther, Address } from 'viem'
 
 export default function Bounty() {
   const router = useRouter()
@@ -63,9 +64,10 @@ export default function Bounty() {
 
   // Prepare the contract
   const { config } = usePrepareContractWrite({
-    address: '0xFBA3912Ca04dd458c843e2EE08967fC04f3579c2',
+    address: repoAddress as Address,
     abi: abi,
     functionName: 'createBounty',
+    value: parseEther(form.getValues().bounty),
     args: [
       form.getValues().title,
       form.getValues().description
@@ -79,7 +81,7 @@ export default function Bounty() {
 
   useEffect(() => {
     if (isSuccess) {
-      router.push('/issues')
+      router.push(`/bounty-list?address=${repoAddress}`)
     }
   }, [isSuccess])
 
@@ -106,9 +108,9 @@ export default function Bounty() {
                     name="title"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className='text-1.5xl'>Title of the discussion</FormLabel>
+                        <FormLabel className='text-1.5xl'>Title of the bounty</FormLabel>
                         <FormControl>
-                          <Input className="custom-input" placeholder="Type the discussion title here.." {...field} />
+                          <Input className="custom-input" placeholder="Type the bounty title here.." {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -119,7 +121,7 @@ export default function Bounty() {
                     name="description"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className='text-1.5xl'>Description of the discussion</FormLabel>
+                        <FormLabel className='text-1.5xl'>Description of the bounty</FormLabel>
                         <FormControl>
                           <Input className="custom-input" placeholder="Type description here.." {...field} />
                         </FormControl>
@@ -133,7 +135,7 @@ export default function Bounty() {
                       name="bounty"
                       render={({ field }) => (
                         <FormItem className="w-6/12 pr-10">
-                          <FormLabel className="text-1.5xl">Issue Bounty</FormLabel>
+                          <FormLabel className="text-1.5xl">Bounty Value</FormLabel>
                           <FormControl>
                             <div className='rt-input-input'>
                               <Input className="custom-input" placeholder="Set a bounty" {...field} />
