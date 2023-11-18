@@ -6,11 +6,10 @@ import Container from "@/components/ui/container";
 import { Icons } from "@/components/ui/icons";
 import {
   useWeb3Modal,
-  useWeb3ModalEvents,
   useWeb3ModalState,
 } from "@web3modal/wagmi/react";
 import { useAccount, useSignMessage } from "wagmi";
-import { useRouter, usePathname, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import {
   useInitWeb3InboxClient,
   useManageSubscription,
@@ -71,7 +70,9 @@ const SubNav = () => {
   }, [signMessage, address, setAccount]);
 
   useEffect(() => {
-    handleToast(messages[-1].message)
+    if(messages.length > 0) {
+      handleToast(messages[-1].message)
+    }
   }, [messages]);
 
   const handleRegistration = useCallback(async () => {
