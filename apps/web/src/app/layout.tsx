@@ -9,8 +9,8 @@ import { ThemeProvider } from "@/components/theme-provider"
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'TurGit',
-  description: 'Welcome to TurGit',
+  title: 'OdulGit',
+  description: 'Welcome to OdulGit',
 }
 
 export default function RootLayout({

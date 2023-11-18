@@ -33,7 +33,7 @@ export default function RepoList() {
   };
 
   const handleRepoClick = (repoAddress: string) => {
-    router.push(`/repos/repo?address=${repoAddress}`);
+    router.push(`/repo-list/repo?address=${repoAddress}`);
   };
 
   const defaultRepoData: RepoData[] = []
