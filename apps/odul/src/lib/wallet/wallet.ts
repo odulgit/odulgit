@@ -17,8 +17,8 @@ export const metadata = {
 export const createWalletProvider = async () => {
   const provider = await EthereumProvider.init({
     projectId: getConfig()?.walletConnect?.projectId as string, // REQUIRED your projectId
-    chains: [5], // REQUIRED chain ids
-    optionalChains: [1, 81712], // OPTIONAL chain ids
+    chains: [11155111], // REQUIRED chain ids
+    optionalChains: [11155111], // OPTIONAL chain ids
     showQrModal: false, // REQUIRED set to "true" to use @walletconnect/modal
     metadata, // OPTIONAL metadata of your app
     events: ["accountsChanged", "chainChanged", "network", "disconnect", "display_uri"], // REQUIRED ethereum events
