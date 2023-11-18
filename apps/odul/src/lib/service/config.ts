@@ -7,7 +7,6 @@ type DeepPartial<T> = T extends object ? {
 
 type ConfigType = DeepPartial<{
   ethereum: {
-    privateKey: string
     networkUrl: string
     contract: string
     chainId: string
