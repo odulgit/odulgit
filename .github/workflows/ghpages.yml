@@ -45,6 +45,12 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
+      - name: Create Env File
+        run: |
+          touch ./apps/web/.env
+          echo NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID=${{secrets.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID}} >> ./apps/web/.env
+          echo NEXT_PUBLIC_GIT_FACTORY_SEPOLIA_CONTRACT=${{secrets.NEXT_PUBLIC_GIT_FACTORY_SEPOLIA_CONTRACT}} >> ./apps/web/.env
+
       - name: Build my App
         run: pnpm run build --filter web
 
