@@ -36,8 +36,9 @@ export const testWalletConnect = async () => {
   return address
 }
 
-export const getGitFactoryContract = () => {
-  const { wallet } = getWallet()
+export const getGitFactoryContract = async () => {
+  // const { wallet } = getWallet()
+  const { wallet } = await getWeb3Wallet()
   const contract = new Contract(
     contractAddr,
     gitFactoryContractABi.abi,
@@ -46,8 +47,9 @@ export const getGitFactoryContract = () => {
   return contract
 }
 
-export const getGitContract = (address: string) => {
-  const { wallet } = getWallet()
+export const getGitContract = async (address: string) => {
+  // const { wallet } = getWallet()
+  const { wallet } = await getWeb3Wallet()
   const contract = new Contract(
     address,
     gitContractABi.abi,

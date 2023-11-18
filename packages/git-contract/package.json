@@ -6,9 +6,9 @@
   "scripts": {
     "build": "tsc",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "deploy:git": "hardhat deploy:git --network quorum",
-    "deploy": "hardhat deploy:gitfactory --network quorum",
-    "verify:git": "hardhat verify:gitContract --network quorum"
+    "deploy:git": "hardhat deploy:git",
+    "deploy": "hardhat deploy:gitfactory",
+    "verify:git": "hardhat verify:gitContract"
   },
   "keywords": [],
   "author": "",

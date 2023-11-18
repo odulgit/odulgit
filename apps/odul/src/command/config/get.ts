@@ -19,4 +19,5 @@ export const builder = (yargs: Argv<OptType>) => {
 
 export const handler = (argv: Arguments<OptType>) => {
   console.info(getConfigByName(argv.name))
+  process.exit(0)
 }
