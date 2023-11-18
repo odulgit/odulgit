@@ -62,7 +62,7 @@ export const release = async (dto: {
       console.log(`lighthouse: ${cid}`)
     }
     if (dto.type === "deal") {
-      cid = await deal(file)
+      await deal(file)
     }
     if (dto.type === "lotus") {
       cid = await uploadFile(fs.readFileSync(file))
