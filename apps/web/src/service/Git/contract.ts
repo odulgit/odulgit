@@ -36,7 +36,7 @@ export interface RRData {
 export const getRepo = async (repoAddress: string) => {
   const { chain } = getNetwork()
   const publicClient = publicClients[chain!.name]
-  const repo = await publicClient.readContract({
+  const repo: RepoData = await publicClient.readContract({
     address: repoAddress,
     abi: gitAbi,
     functionName: 'repo',

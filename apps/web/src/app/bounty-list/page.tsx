@@ -7,6 +7,7 @@ import * as React from "react";
 import { useRouter, useParams, useSearchParams } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
 import { BountyData, getBountyList } from '@/service/Git/contract'
+import { formatEther } from 'viem'
 
 export default function BountyList() {
   const router = useRouter();
@@ -49,17 +50,12 @@ export default function BountyList() {
                       <div className="text-xl font-roboto-bold">
                         {bounty.title}
                       </div>
-
-                      <Button variant="ghost" size="icon">
-                        <img src="./Icon-copy.svg" alt="Copy Icon" />
-                      </Button>
                     </div>
 
                     <div className='flex flex-1 flex-row items-center justify-end'>
                       <div className="flex items-center text-xl font-roboto-bold">
                         <Badge variant="default">
-                          <img src="./Icon-value.svg" alt="Value Icon" className='mr-1' />
-                          {bounty.bountyAmount}
+                          Ξ {formatEther(bounty.bountyAmount)}
                         </Badge>
                       </div>
                     </div>

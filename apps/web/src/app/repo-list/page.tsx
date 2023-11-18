@@ -12,6 +12,7 @@ import { getRepoList } from "@/service/GitFactory/contract";
 import { RepoData } from "@/service/Git/contract";
 import { useToast } from "@/components/ui/use-toast";
 import { formatString } from "../../lib/utils";
+import { formatEther } from 'viem'
 
 export default function RepoList() {
   const router = useRouter();
@@ -19,7 +20,6 @@ export default function RepoList() {
     index: -1,
     copy: false,
   });
-  const [repos, setRepos] = useState();
   const { toast } = useToast();
 
   const handleCopyText = (number: number, textToCopy: string) => {
@@ -96,12 +96,7 @@ export default function RepoList() {
                     <div className="flex flex-1 flex-row items-center justify-end">
                       <div className="flex text-xl font-roboto-bold items-center">
                         <Badge variant="default">
-                          <img
-                            src="./Icon-value.svg"
-                            alt="Value Icon"
-                            className="mr-1"
-                          />
-                          {repo.totalBounty}
+                          Ξ {formatEther(repo.totalBounty)}
                         </Badge>
                         <Button variant="ghost" size="icon">
                           <img
