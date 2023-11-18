@@ -202,7 +202,7 @@ export default function RR() {
                           </FormControl>
                           <SelectContent>
                             {bountyList.map((bounty, index) => (
-                              <SelectItem value={String(bounty.id)}>{bounty.title}</SelectItem>
+                              <SelectItem value={String(bounty.id)}>{String(bounty.id)} - {bounty.title}</SelectItem>
                             ))}
                           </SelectContent>
                         </Select>
