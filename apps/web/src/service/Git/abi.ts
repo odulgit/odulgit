@@ -16,7 +16,7 @@ export const abi = [
       {
         "indexed": true,
         "internalType": "address",
-        "name": "contributer",
+        "name": "contributor",
         "type": "address"
       },
       {
@@ -35,7 +35,7 @@ export const abi = [
       {
         "indexed": true,
         "internalType": "address",
-        "name": "contributer",
+        "name": "contributor",
         "type": "address"
       },
       {
@@ -109,7 +109,7 @@ export const abi = [
       {
         "indexed": true,
         "internalType": "address",
-        "name": "contributer",
+        "name": "contributor",
         "type": "address"
       },
       {
@@ -361,19 +361,6 @@ export const abi = [
     "type": "function"
   },
   {
-    "inputs": [],
-    "name": "codeOwner",
-    "outputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
     "inputs": [
       {
         "internalType": "address",
@@ -405,7 +392,7 @@ export const abi = [
         "type": "uint256"
       }
     ],
-    "name": "contributer",
+    "name": "contributor",
     "outputs": [
       {
         "internalType": "string",
@@ -438,7 +425,7 @@ export const abi = [
     "outputs": [
       {
         "internalType": "address",
-        "name": "contributer",
+        "name": "contributor",
         "type": "address"
       },
       {
@@ -640,6 +627,25 @@ export const abi = [
   {
     "inputs": [
       {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "name": "members",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "components": [
           {
             "internalType": "bytes20",
@@ -673,7 +679,7 @@ export const abi = [
       },
       {
         "internalType": "address",
-        "name": "_contributer",
+        "name": "_contributor",
         "type": "address"
       },
       {
@@ -795,7 +801,7 @@ export const abi = [
     "outputs": [
       {
         "internalType": "address",
-        "name": "contributer",
+        "name": "contributor",
         "type": "address"
       },
       {
@@ -846,6 +852,64 @@ export const abi = [
     "name": "setDescription",
     "outputs": [],
     "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "num",
+        "type": "uint256"
+      }
+    ],
+    "name": "setRepoThreshold",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "threshould",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "id",
+        "type": "uint256"
+      }
+    ],
+    "name": "vote",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "name": "votes",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
     "type": "function"
   }
 ]

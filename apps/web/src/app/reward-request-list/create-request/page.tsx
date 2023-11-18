@@ -27,43 +27,45 @@ import {
 import { Input } from "@/components/ui/input"
 import { Checkbox } from '@/components/ui/checkbox'
 import CommContainer from "@/components/common-container";
-import { usePrepareContractWrite, useContractWrite, useWaitForTransaction } from 'wagmi'
+import { usePrepareContractWrite, useContractWrite, useWaitForTransaction, useContractRead } from 'wagmi'
 import { abi } from '@/service/Git/abi'
 import { useRouter, useSearchParams } from 'next/navigation';
+import { Address } from 'viem'
+import { BountyData, getBountyList, getRepo, RepoData } from '@/service/Git/contract'
+import { useAccount } from 'wagmi'
 
 export default function RR() {
+  const [bountyList, setBountyList] = useState<BountyData[]>([])
+  const [repo, setRepo] = useState<RepoData>()
+  const { address, isConnected } = useAccount()
+  const [readCommit, setCommit] = useState()
+
   const searchParams = useSearchParams()
   const repoAddress = searchParams.get('address') ?? ''
   const formSchema = z.object({
-    title: z.string().refine((value) => value !== ''),
-    description: z.string().refine((value) => value !== ''),
-    from: z.string().refine((value) => value !== ''),
-    to: z.boolean().refine((value) => value !== false),
-    linkIssue: z.string().refine((value) => value !== ''),
+    contributeId: z.string().refine((value) => value !== ''),
+    bountyId: z.string().refine((value) => value !== ''),
+    agreed: z.boolean().refine((value) => value !== false),
   })
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      title: '',
-      description: '',
-      from: '',
-      to: false,
-      linkIssue: '',
+      contributeId: '',
+      bountyId: '',
+      agreed: false
     },
   })
 
-  const branchList = [
-    { id: "1", name: "main" },
-    { id: "2", name: "develop" },
-  ];
+  useEffect(() => {
+    const fetchData = async () => {
+      const bounties: BountyData[] = await getBountyList(repoAddress)
+      setBountyList(bounties)
+      const repo: RepoData = await getRepo(repoAddress)
+      setRepo(repo)
+    }
+    fetchData()
+  }, [])
 
-  const issueList = [
-    { id: "1", name: "feat/deposit" },
-    { id: "2", name: "feat/withdraw" },
-  ];
-
-  const [fromBranches, setFromBranches] = useState(branchList)
-  const [issues, setIssues] = useState(issueList)
   const [isDisabled, setDisabled] = useState(true)
 
   function onSubmit(values: z.infer<typeof formSchema>) {
@@ -71,14 +73,34 @@ export default function RR() {
     write?.()
   }
 
+  // const { data: bundle, isError, isLoading: isReadCommitLoading } = useContractRead({
+  //   address: repoAddress as Address,
+  //   abi: abi,
+  //   functionName: 'contributor',
+  //   args: [
+  //     address,
+  //     form.getValues().contributeId,
+  //   ],
+  //   enabled: form.getValues().contributeId.length !== 0
+  // })
+
+  // useEffect(() => {
+  //   if (bundle) {
+  //     setCommit(bundle[1])
+  //   }
+  //   console.log(bundle)
+
+  // }, [isReadCommitLoading])
+
+
   // Prepare the contract
   const { config } = usePrepareContractWrite({
-    address: '0xFBA3912Ca04dd458c843e2EE08967fC04f3579c2',
+    address: repoAddress as Address,
     abi: abi,
     functionName: 'rewardRequest',
     args: [
-      parseInt(form.getValues().from),
-      form.getValues().title
+      Number(form.getValues().contributeId),
+      Number(form.getValues().bountyId)
     ],
   })
 
@@ -90,7 +112,7 @@ export default function RR() {
 
   useEffect(() => {
     if (isSuccess) {
-      router.push('/repos')
+      router.push(`/reward-request-list?address=${repoAddress}`)
     }
   }, [isSuccess])
 
@@ -98,71 +120,39 @@ export default function RR() {
     setDisabled(!form.formState.isValid)
   }, [form.getValues()]);
 
-
   return (
     <main className='background min-h-screen'>
       <Container>
         <div className='flex flex-col'>
           <div className='m-24'>
             <div className='text-2xl mb-5 font-roboto-bold'>
-              Send Pull Request
+              Send Reward Request
             </div>
             {/* <div className='flex issue-background'> */}
             <CommContainer>
               <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="m-5 space-y-8">
-                  <FormField
-                    control={form.control}
-                    name="title"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className='text-1.5xl'>Repository title</FormLabel>
-                        <FormControl>
-                          <Input className="custom-input" placeholder="Type the repository title here.." {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="description"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className='text-1.5xl'>Repository description</FormLabel>
-                        <FormControl>
-                          <Input className="custom-input" placeholder="Description for this repository.." {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+                  <div className="text-2xl mb-5 font-roboto-bold">
+                    Repository - {repo?.name}
+                  </div>
+
                   <div className="flex flex-row justify-between">
                     <FormField
                       control={form.control}
-                      name="from"
+                      name="contributeId"
                       render={({ field }) => (
                         <FormItem className="flex-1 pr-10">
-                          <FormLabel className="text-1.5xl">From branch</FormLabel>
-                          <Select onValueChange={field.onChange} defaultValue={field.value}>
-                            <FormControl>
-                              <SelectTrigger>
-                                <SelectValue placeholder="Select branch" />
-                              </SelectTrigger>
-                            </FormControl>
-                            <SelectContent>
-                              {fromBranches.map((branch, index) => (
-                                <SelectItem value={branch.id}>{branch.name}</SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
+                          <FormLabel className='text-1.5xl'>From Contribute ID</FormLabel>
+                          <FormControl>
+                            <Input className="custom-input" placeholder="Type your contribute id here.." {...field} />
+                          </FormControl>
                           <FormMessage />
                         </FormItem>
                       )}
                     />
                     <FormField
                       control={form.control}
-                      name="to"
+                      name="agreed"
                       render={({ field }) => (
                         <FormItem className="flex-1 pr-10">
                           <div className="flex flex-col">
@@ -187,21 +177,32 @@ export default function RR() {
                       )}
                     />
                   </div>
+                  {/* {readCommit
+                    ? <div className="flex flex-col">
+                      <div className="text-1.5xl">
+                        Prepare to merge
+                      </div>
+                      <div>
+                        {readCommit}
+                      </div>
+                    </div>
+                    : null
+                  } */}
                   <FormField
                     control={form.control}
-                    name="linkIssue"
+                    name="bountyId"
                     render={({ field }) => (
                       <FormItem className="w-6/12 pr-10">
-                        <FormLabel className='text-1.5xl'>Link to Issue</FormLabel>
+                        <FormLabel className='text-1.5xl'>Link to Bounty</FormLabel>
                         <Select onValueChange={field.onChange} defaultValue={field.value}>
                           <FormControl>
                             <SelectTrigger>
-                              <SelectValue placeholder="Choose Issue" />
+                              <SelectValue placeholder="Choose Bounty" />
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent>
-                            {issues.map((issue, index) => (
-                              <SelectItem value={issue.id}>{issue.name}</SelectItem>
+                            {bountyList.map((bounty, index) => (
+                              <SelectItem value={String(bounty.id)}>{bounty.title}</SelectItem>
                             ))}
                           </SelectContent>
                         </Select>
@@ -212,7 +213,7 @@ export default function RR() {
                   <div className="flex flex-row justify-center">
                     <Button className="custom-cancel-btn mr-5" variant="outline">Cancel</Button>
                     <Button className="custom-send-btn ml-5" type="submit" disabled={isDisabled}>
-                      {isLoading ? 'Sending...' : 'Send Pull Request'}
+                      {isLoading ? 'Sending...' : 'Send Reward Request'}
                     </Button>
                   </div>
                 </form>

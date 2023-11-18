@@ -73,7 +73,6 @@ export default function Bounty() {
       form.getValues().description
     ],
   })
-
   const { data, write } = useContractWrite(config)
   const { isLoading, isSuccess } = useWaitForTransaction({
     hash: data?.hash,
@@ -98,7 +97,7 @@ export default function Bounty() {
         <div className='flex flex-col'>
           <div className='m-24'>
             <div className='text-2xl mb-5 font-roboto-bold'>
-              {newDisscussion}
+              New Bounty
             </div>
             <div className='flex flex-row issue-background'>
               <Form {...form}>

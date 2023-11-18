@@ -42,7 +42,7 @@ export default function Home() {
               A Repository Place
             </div>
             <div className='font-roboto-normal text-xl mb-6'>Used by leading enterprises</div>
-            <Button variant="home" size="home" onClick={() => (router.push('/repos'))} >Get Started</Button>
+            <Button variant="home" size="home" onClick={() => (router.push('/repo-list'))} >Get Started</Button>
           </div>
           <div className='custom-text text-6xl mt-36'>
             Ξ {totalBounty}
