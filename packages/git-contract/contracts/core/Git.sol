@@ -3,8 +3,9 @@ pragma solidity ^0.8.0;
 
 import {SHA1} from "../libraries/SHA1.sol";
 import {Bounty} from "./Bounty.sol";
+import {Dao} from "./Dao.sol";
 
-contract Git is Bounty {
+contract Git is Bounty, Dao {
     //  === public storage ===
     address public factory;
     // @TODO: name of the repo
@@ -16,7 +17,7 @@ contract Git is Bounty {
     mapping(uint256 => Request) public requests;
     mapping(bytes20 => string) public cid;
     mapping(address => uint256) public contributeCount;
-    mapping(address => mapping(uint256 => Bundle)) public contributer;
+    mapping(address => mapping(uint256 => Bundle)) public contributor;
     mapping(address => mapping(uint256 => Request)) public contributorRequest;
     mapping(bytes20 => bool) public mainCommitExist;
     // === event ===
@@ -32,11 +33,11 @@ contract Git is Bounty {
     );
 
     event contribute(
-        address indexed contributer,
+        address indexed contributor,
         uint256 indexed contributeID,
         Bundle bundle
     );
-    event merged(address indexed contributer, Bundle indexed bundle);
+    event merged(address indexed contributor, Bundle indexed bundle);
 
     // === constructor ===
     constructor() payable {
@@ -45,13 +46,13 @@ contract Git is Bounty {
 
     // === modifier ===
     modifier onlyCodeOwner() {
-        require(msg.sender == repo.codeOwner, "forbidden");
+        require((msg.sender == repo.codeOwner), "forbidden");
         _;
     }
 
-    modifier onlyIssuerOrCodeOwner(address _issuer) {
+    modifier onlyIssuerOrCodeOwner(uint256 id) {
         require(
-            msg.sender == _issuer || msg.sender == repo.codeOwner,
+            (msg.sender == repo.codeOwner || votes[id] > threshould),
             "only issuer or code owner"
         );
         _;
@@ -76,7 +77,7 @@ contract Git is Bounty {
 
     // @TODO Brnach Name
     struct Request {
-        address contributer;
+        address contributor;
         uint256 contributeId;
         uint256 linkBounty;
         bytes20 commitHash;
@@ -116,7 +117,7 @@ contract Git is Bounty {
         );
 
         require(
-            contributer[msg.sender][contributeCount[msg.sender] - 1].sha ==
+            contributor[msg.sender][contributeCount[msg.sender] - 1].sha ==
                 repo.latestCommit,
             "need to contribute to this repo branch"
         );
@@ -125,7 +126,7 @@ contract Git is Bounty {
             msg.sender,
             contributeId,
             bountyId,
-            contributer[msg.sender][contributeId].sha
+            contributor[msg.sender][contributeId].sha
         );
         contributorRequest[msg.sender][contributeId] = request;
         requests[requestCount] = request;
@@ -138,10 +139,10 @@ contract Git is Bounty {
     // @param parent: bytes20 sha1 hash of the parent commit
     function merge(
         Commit memory commit,
-        address _contributer,
+        address _contributor,
         uint256 contributeId,
         string memory _cid
-    ) public onlyCodeOwner {
+    ) public onlyIssuerOrCodeOwner(contributeId) {
         require(
             commit.thisHash == verifyCommit(commit),
             "need to parent to this branch"
@@ -151,19 +152,20 @@ contract Git is Bounty {
             "need merge to main branch"
         );
         require(
-            commit.parents[1] == contributer[_contributer][contributeId].sha,
+            commit.parents[1] == contributor[_contributor][contributeId].sha,
             "contuber is not same to commit parent"
         );
         repo.latestCommit = commit.thisHash;
         mainCommitExist[commit.thisHash] = true;
         cid[commit.thisHash] = _cid;
 
-        if (contributorRequest[_contributer][contributeId].linkBounty != 0) {
+        if (contributorRequest[_contributor][contributeId].linkBounty != 0) {
             giveBounty(
-                contributorRequest[_contributer][contributeId].linkBounty,
-                _contributer
+                contributorRequest[_contributor][contributeId].linkBounty,
+                _contributor
             );
         }
+        join(_contributor);
     }
 
     // API 4 : push commit to repo
@@ -187,7 +189,7 @@ contract Git is Bounty {
         );
 
         uint256 count = contributeCount[msg.sender];
-        contributer[msg.sender][count] = bundle;
+        contributor[msg.sender][count] = bundle;
         contributeCount[msg.sender] = count + 1;
         emit contribute(msg.sender, count, bundle);
     }
@@ -237,6 +239,11 @@ contract Git is Bounty {
             "test commit"
         );
         return SHA1.sha1(data);
+    }
+
+    function setRepoThreshold(uint256 num) public {
+        require(msg.sender == repo.codeOwner, "Forbidden");
+        threshould = num;
     }
 
     // === view ===

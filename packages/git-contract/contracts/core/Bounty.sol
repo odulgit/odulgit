@@ -58,7 +58,9 @@ contract Bounty {
         require(amount > 0, "Bounty amount is zero");
 
         bountyContent[bountyId].openStatus = 0;
-        payable(contributer).transfer(bountyAmount[bountyId]);
+        bountyAmount[bountyId] = 0;
+        payable(contributer).transfer(amount);
+        bountyTotalAmount -= amount;
 
         emit BountyGiven(bountyId, contributer, amount);
     }
