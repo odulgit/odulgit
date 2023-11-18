@@ -14,7 +14,7 @@ const sign = async (privateKey: string) => {
   return signMessage
 }
 
-export const uploadData = async (file: any, apiKey: string) => {
+export const uploadData = async (file: any, apiKey: string): Promise<any> => {
   return await lighthouse.upload(file, apiKey)
 }
 
