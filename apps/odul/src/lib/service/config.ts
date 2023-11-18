@@ -10,6 +10,7 @@ type ConfigType = DeepPartial<{
     privateKey: string
     networkUrl: string
     contract: string
+    chainId: string
   }
   ipfs: {
     bootstrap: {
@@ -23,6 +24,7 @@ type ConfigType = DeepPartial<{
   }
   walletConnect: {
     projectId: string
+    notifySecret: string
   }
 }>
 
