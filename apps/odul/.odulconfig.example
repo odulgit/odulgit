@@ -2,9 +2,11 @@
 privateKey=
 networkUrl=
 contract=
+chainId=
 
 [walletConnect]
 projectId=
+notifySecret=
 
 [ipfs.bootstrap]
 peerId=

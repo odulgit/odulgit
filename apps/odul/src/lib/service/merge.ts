@@ -9,6 +9,7 @@ import { revParse } from "../git/rev-parse"
 import { gc } from "../git/gc"
 import { mergeToContract } from "../wallet/invoke"
 import { catCommit } from "../git/cat-commit"
+import { sendNotify } from "../util/notifty"
 
 export const merge = async (dto: {
   branch: string
@@ -42,4 +43,6 @@ export const merge = async (dto: {
   const [contributer, contributeId] = dto.branch.split("/")
 
   await mergeToContract(repository, commit, contributer, contributeId, cid)
+
+  await sendNotify(contributer, "5c2cc8c3-3e06-4d71-b7ac-011d2beff331", "Your contribute is merged", "Your contribute is merged")
 }
