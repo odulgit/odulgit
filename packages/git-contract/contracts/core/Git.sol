@@ -20,6 +20,8 @@ contract Git is Bounty, Dao {
     mapping(address => mapping(uint256 => Bundle)) public contributor;
     mapping(address => mapping(uint256 => Request)) public contributorRequest;
     mapping(bytes20 => bool) public mainCommitExist;
+    mapping(uint256 => Release) public releases;
+    uint256 public relaeseCount;
     // === event ===
     event test(
         bytes20 indexed sha,
@@ -86,6 +88,12 @@ contract Git is Bounty, Dao {
     struct Bundle {
         string cid;
         bytes20 sha;
+    }
+
+    struct Release {
+        bytes20 commit;
+        string name;
+        string cid;
     }
 
     // API 1 : initialize repo (first commit)
@@ -191,6 +199,16 @@ contract Git is Bounty, Dao {
     // API 5 : set repo description
     function setDescription(string memory _description) public onlyCodeOwner {
         repo.description = _description;
+    }
+
+    // API 6: release
+    function release(string memory name, string memory _cid, bytes20 commit) public onlyCodeOwner {
+        releases[relaeseCount] = Release(
+            commit,
+            name,
+            _cid
+        );
+        relaeseCount++;
     }
 
     // === internal ===
