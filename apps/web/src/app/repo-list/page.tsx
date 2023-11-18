@@ -13,15 +13,17 @@ import { RepoData } from "@/service/Git/contract";
 import { useToast } from "@/components/ui/use-toast";
 import { formatString } from "../../lib/utils";
 import { formatEther } from 'viem'
+import { useNetwork } from "wagmi";
 
 export default function RepoList() {
   const router = useRouter();
+  const { chain } = useNetwork();
   const [copied, setCopied] = useState({
     index: -1,
     copy: false,
   });
   const { toast } = useToast();
-
+  console.log(chain?.name, 'chain?.name')
   const handleCopyText = (number: number, textToCopy: string) => {
     navigator.clipboard.writeText(textToCopy).then(() => {
       setCopied({

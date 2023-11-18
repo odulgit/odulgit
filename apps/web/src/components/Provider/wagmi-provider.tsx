@@ -1,14 +1,24 @@
 'use client'
 
 import { WagmiConfig } from 'wagmi'
-import { arbitrum, mainnet, sepolia, goerli, polygonMumbai } from 'viem/chains'
+import {
+    goerli,
+    sepolia,
+    arbitrumSepolia,
+    scrollSepolia,
+    polygonZkEvmTestnet,
+    gnosisChiado,
+} from 'viem/chains'
 import { createWeb3Modal, defaultWagmiConfig } from '@web3modal/wagmi/react'
 import { makeChain } from '@/lib/utils'
 
 const chains = [
     sepolia,
     goerli,
-    polygonMumbai,
+    scrollSepolia,
+    gnosisChiado,
+    polygonZkEvmTestnet,
+    arbitrumSepolia
 ]
 
 const projectId = process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID || 'ODULGIT_ID'

@@ -1,5 +1,12 @@
 import { fallback, createPublicClient, http } from 'viem'
-import { goerli, sepolia } from 'viem/chains'
+import { 
+  goerli, 
+  sepolia, 
+  arbitrumSepolia, 
+  scrollSepolia,
+  polygonZkEvmTestnet,
+  gnosisChiado,
+} from 'viem/chains'
 import { makeChain } from '@/lib/utils'
 
 const goerliProvider = [
@@ -15,6 +22,22 @@ const sepoliaProvider = [
   http('https://rpc.notadegen.com/eth/sepolia')
 ]
 
+const arbSepoliaProvider = [
+  http('https://sepolia-rollup.arbitrum.io/rpc')
+]
+
+const zkEvmTestnetProvider = [
+  http('https://rpc.public.zkevm-test.net')
+]
+
+const gnosisChiadoProvider = [
+  http('https://1rpc.io/gnosis')
+]
+
+const scrollSepoliaProvider = [
+  http('https://sepolia-rpc.scroll.io'),
+]
+
 export const goerliClient: any = createPublicClient({
   chain: goerli,
   transport: fallback(goerliProvider)
@@ -25,7 +48,31 @@ export const sepoliaClient: any = createPublicClient({
   transport: fallback(sepoliaProvider)
 })
 
+export const arbSepoliaClient: any = createPublicClient({
+  chain: arbitrumSepolia,
+  transport: fallback(arbSepoliaProvider)
+})
+
+export const zkEvmTestnetClient: any = createPublicClient({
+  chain: polygonZkEvmTestnet,
+  transport: fallback(zkEvmTestnetProvider)
+})
+
+export const gnosisChiadoClient: any = createPublicClient({
+  chain: gnosisChiado,
+  transport: fallback(gnosisChiadoProvider)
+})
+
+export const scrollSepoliaClient: any = createPublicClient({
+  chain: scrollSepolia,
+  transport: fallback(scrollSepoliaProvider)
+})
+
 export const publicClients: any = {
   'Goerli': goerliClient,
-  'Sepolia':sepoliaClient
+  'Sepolia':sepoliaClient,
+  'Gnosis Chiado': gnosisChiadoClient,
+  'Arbitrum Sepolia':arbSepoliaClient,
+  'Polygon zkEVM Testnet': zkEvmTestnetClient,
+  'Scroll Sepolia': scrollSepoliaClient
 }
