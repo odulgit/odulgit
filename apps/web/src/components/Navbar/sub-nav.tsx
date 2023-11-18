@@ -16,6 +16,7 @@ import {
 } from "@web3inbox/widget-react";
 import { useCallback, useEffect } from "react";
 import { useToast } from "@/components/ui/use-toast";
+import { useRouter } from "next/navigation";
 
 const projectId = process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID as string;
 const SubNav = () => {
@@ -40,6 +41,7 @@ const SubNav = () => {
   const searchParams = useSearchParams();
   const repoAddress = searchParams.get("address") ?? "";
 
+  const router = useRouter();
   const { toast } = useToast();
   const { messages } = useMessages(account);
 
@@ -68,9 +70,9 @@ const SubNav = () => {
 
   useEffect(() => {
     console.log("messages: ", messages);
-    // if(messages.length > 0) {
-    //   handleToast(messages[-1].message)
-    // }
+    if (messages.length > 0) {
+      handleToast(messages[messages.length - 1].message);
+    }
   }, [messages]);
 
   const handleRegistration = useCallback(async () => {
@@ -98,9 +100,21 @@ const SubNav = () => {
   }, [unsubscribe, isSubscribed]);
 
   const handleToast = (message: any) => {
+    const pushRepoAddress = JSON.parse(message.body).repo 
     toast({
       title: message.title,
-      description: message.body,
+      description: `Repository Address: ${pushRepoAddress}`,
+      action: (
+        <Button
+          onClick={() =>
+            router.push(
+              `reward-request-list/create-request?address=${pushRepoAddress}`
+            )
+          }
+        >
+          Create Reward Request
+        </Button>
+      ),
     });
   };
 
