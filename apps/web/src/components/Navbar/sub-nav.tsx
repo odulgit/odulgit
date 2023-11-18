@@ -112,7 +112,7 @@ const SubNav = () => {
             )
           }
         >
-          Create Reward Request
+          Create RR
         </Button>
       ),
     });
