@@ -13,6 +13,8 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip"
+import { useMessages, useSubscription, useW3iAccount } from "@web3inbox/widget-react";
+import { useToast } from "@/components/ui/use-toast";
 
 export default function RRList() {
   const router = useRouter();
@@ -20,6 +22,30 @@ export default function RRList() {
   const [rewardList, setRewardList] = useState<any[]>([])
   const searchParams = useSearchParams()
   const repoAddress = searchParams.get('address') ?? ''
+  const [copied, setCopied] = useState({
+    index: -1,
+    copy: false,
+  });
+  const { toast } = useToast();
+
+  const handleCopyText = (number: number, textToCopy: string) => {
+    navigator.clipboard.writeText(textToCopy).then(() => {
+      setCopied({
+        index: number,
+        copy: true,
+      });
+      setTimeout(() => {
+        setCopied({
+          index: -1,
+          copy: false,
+        });
+      }, 1000);
+    });
+    toast({
+      title: "Contribution Copied!",
+      description: `${textToCopy}`,
+    });
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -65,7 +91,7 @@ export default function RRList() {
                       <div className='flex flex-1 flex-row space-x-2'>
                         <img src="./Icon-repo.svg" alt="Repo Icon" />
                         <div className=" text-purple-400 text-xl font-roboto-bold">
-                          Request {Number(request.contributeId)}
+                          Request {request.id}
                         </div>
                       </div>
                     </div>
@@ -94,7 +120,7 @@ export default function RRList() {
                         </Tooltip>
                         <div className="flex-1 ml-1">{request.bountyName}</div>
                       </div>
-                      <div className="flex flex-row">
+                      <div className="flex flex-row items-center">
                         <Tooltip>
                           <TooltipTrigger>
                             <img src="./Icon-authors.svg" alt="Issues Icon" />
@@ -103,7 +129,23 @@ export default function RRList() {
                             Contributor
                           </TooltipContent>
                         </Tooltip>
-                        <div className="flex-1 ml-1">{request.contributor}</div>
+                        <div className="flex-1 ml-1 ">{request.contributor}/{Number(request.contributeId)}</div>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          key={index}
+                          onClick={() => {
+                            if (!copied.copy && index !== copied.index) {
+                              handleCopyText(index, `${request.contributor}/${Number(request.contributeId)}`);
+                            }
+                          }}
+                        >
+                          {copied.copy && index == copied.index ? (
+                            <img src="./Icon-check.svg" alt="Copy Icon" />
+                          ) : (
+                            <img src="./Icon-copy.svg" alt="Copy Icon" />
+                          )}
+                        </Button>
                       </div>
                     </div>
                   </CommContainer>
