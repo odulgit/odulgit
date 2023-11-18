@@ -6,13 +6,14 @@ import { Button } from '@/components/ui/button';
 import * as React from "react"
 import { useRouter, useParams, useSearchParams } from 'next/navigation';
 import { getRewardRequestList } from "@/service/Git/contract";
-import { useSubscription, useW3iAccount } from "@web3inbox/widget-react";
+import { useMessages, useSubscription, useW3iAccount } from "@web3inbox/widget-react";
 
 export default function RRList() {
   const router = useRouter();
   const params = useParams()
   
   const { account } = useW3iAccount();
+  const { messages } = useMessages(account);
   const { subscription } = useSubscription(account);
   const [rewardList, setRewardList] = useState([])
   const searchParams = useSearchParams()
@@ -140,7 +141,15 @@ export default function RRList() {
                       {repo.description}
                     </div>
                   </div>
-                  {JSON.stringify(subscription, undefined, 2)}
+                    <div className="flex flex-col space-y-2">
+                      {messages.map((id, message) => (
+                        <div className="flex flex-row space-x-2">
+                          <div className="text-purple-400 text-xl font-roboto-bold">
+                            {message}
+                          </div>
+                        </div>
+                      ))}
+                  </div>
                 </CommContainer>
               ))}
             </div>
