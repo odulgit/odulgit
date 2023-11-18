@@ -11,4 +11,5 @@ export const builder = (yargs: Argv) => {
 
 export const handler = async () => {
   await init()
+  process.exit(0)
 }

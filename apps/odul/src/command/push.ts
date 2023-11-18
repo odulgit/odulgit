@@ -25,4 +25,5 @@ export const builder = (yargs: Argv<OptType>) => {
 
 export const handler = async (argv: Arguments<OptType>) => {
   await push(argv)
+  process.exit(0)
 }

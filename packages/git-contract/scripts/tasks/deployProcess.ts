@@ -85,7 +85,7 @@ task("deploy:gitfactory", "Deploy git factory")
 
     if (verify) {
       console.log("verifying contract...")
-      await deployContract.deployTransaction.wait(1)
+      await deployContract.deployTransaction.wait(3)
       try {
         await hre.run("verify:verify", {
           address: deployContract.address,
