@@ -33,7 +33,7 @@ createWeb3Modal({
 
 export const WagmiProvider = ({ children }: { children: React.ReactNode }) => {
     return (
-        <WagmiConfig config={wagmiConfig}>
+        <WagmiConfig config={wagmiConfig as any}>
             {children}
         </WagmiConfig>
     )
