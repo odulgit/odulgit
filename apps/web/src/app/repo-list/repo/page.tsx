@@ -99,9 +99,6 @@ export default function Page({ params }: { params: { repoAddress: string } }) {
                                                 <div className="flex-1">
                                                     address
                                                 </div>
-                                                <div>
-                                                    copy Icon
-                                                </div>
                                             </div>
                                             <div className="flex justify-end mt-7">
                                                 <Button>

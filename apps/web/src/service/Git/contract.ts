@@ -21,6 +21,7 @@ export interface BountyData {
     title: any;
     description: any;
     openStatus:string;
+    bountyCount: any;
 }
 
 export interface RRData {
@@ -95,7 +96,8 @@ export const getBountyList = async (repoAddress:string) => {
         address: repoAddress,
         title:bountyContent[0],
         description:bountyContent[1],
-        openStatus:bountyContent[2]
+        openStatus:bountyContent[2],
+        bountyCount: Number(bountyCount),
     }
     bountyList.push(bounty)
   }
