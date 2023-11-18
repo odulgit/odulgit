@@ -1,5 +1,5 @@
-import fs from 'fs'
-import path from 'path'
+import fs from "fs"
+import path from "path"
 
 export const writeFileSync = (
   dirPath: string,
@@ -7,5 +7,5 @@ export const writeFileSync = (
   data: any,
 ) => {
   fs.mkdirSync(dirPath, { recursive: true })
-  fs.writeFileSync(path.join(dirPath, fileName), data, 'utf8')
+  fs.writeFileSync(path.join(dirPath, fileName), data, "utf8")
 }
