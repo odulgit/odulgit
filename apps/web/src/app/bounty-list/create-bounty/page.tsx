@@ -198,8 +198,7 @@ export default function Bounty() {
                     )}
                   />
                   <div className="flex flex-row justify-center">
-                    {/* <Button className="custom-cancel-btn mr-5" variant="outline">Cancel</Button> */}
-                    <Button className="custom-cancel-btn mr-5" variant="outline" onClick={() => (router.push('/issues'))}>
+                    <Button className="custom-cancel-btn mr-5" variant="outline" onClick={() => (router.push(`/bounty-list?address=${repoAddress}`))}>
                       Cancel
                     </Button>
                     <Button className="custom-send-btn ml-5" type="submit" disabled={isDisabled}>
