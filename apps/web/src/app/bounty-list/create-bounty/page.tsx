@@ -1,12 +1,12 @@
-'use client'
+"use client";
 
-import * as React from "react"
-import Container from '@/components/ui/container';
-import { Button } from '@/components/ui/button'
-import { useState, useEffect } from 'react'
-import * as z from "zod"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
+import * as React from "react";
+import Container from "@/components/ui/container";
+import { Button } from "@/components/ui/button";
+import { useState, useEffect } from "react";
+import * as z from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
 import {
   Form,
   FormControl,
@@ -14,102 +14,112 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form"
-import { CalendarIcon } from "@radix-ui/react-icons"
-import { format } from "date-fns"
-import { cn } from "@/lib/utils"
-import { Calendar } from "@/components/ui/calendar"
+} from "@/components/ui/form";
+import { CalendarIcon } from "@radix-ui/react-icons";
+import { format } from "date-fns";
+import { cn } from "@/lib/utils";
+import { Calendar } from "@/components/ui/calendar";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover"
+} from "@/components/ui/popover";
 
-import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
-import { useRouter, useSearchParams } from 'next/navigation';
-import { usePrepareContractWrite, useContractWrite, useWaitForTransaction } from 'wagmi'
-import { abi } from '@/service/Git/abi'
-import { parseEther, Address } from 'viem'
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { useRouter, useSearchParams } from "next/navigation";
+import {
+  usePrepareContractWrite,
+  useContractWrite,
+  useWaitForTransaction,
+} from "wagmi";
+import { abi } from "@/service/Git/abi";
+import { parseEther, Address } from "viem";
 
 export default function Bounty() {
-  const router = useRouter()
-  const searchParams = useSearchParams()
-  const repoAddress = searchParams.get('address') ?? ''
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const repoAddress = searchParams.get("address") ?? "";
 
-  const [newDisscussion, setTotalBounty] = useState('Disscussion #')
-  const [isDisabled, setDisabled] = useState(true)
+  const [newDisscussion, setTotalBounty] = useState("Disscussion #");
+  const [isDisabled, setDisabled] = useState(true);
 
   const formSchema = z.object({
-    title: z.string().refine((value) => value !== ''),
-    description: z.string().refine((value) => value !== ''),
-    bounty: z.string().refine((value) => value !== ''),
+    title: z.string().refine((value) => value !== ""),
+    description: z.string().refine((value) => value !== ""),
+    bounty: z.string().refine((value) => value !== ""),
     deadline: z.any(),
     markdown: z.string(),
-  })
+  });
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      title: '',
-      description: '',
-      bounty: '',
-      markdown: '',
+      title: "",
+      description: "",
+      bounty: "",
+      markdown: "",
     },
-  })
+  });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log('Send Bounty Request')
-    write?.()
+    console.log("Send Bounty Request");
+    write?.();
   }
 
   // Prepare the contract
   const { config } = usePrepareContractWrite({
     address: repoAddress as Address,
     abi: abi,
-    functionName: 'createBounty',
+    functionName: "createBounty",
     value: parseEther(form.getValues().bounty),
-    args: [
-      form.getValues().title,
-      form.getValues().description
-    ],
-  })
-  const { data, write } = useContractWrite(config)
+    args: [form.getValues().title, form.getValues().description],
+  });
+  const { data, write } = useContractWrite(config);
   const { isLoading, isSuccess } = useWaitForTransaction({
     hash: data?.hash,
-  })
+  });
 
   useEffect(() => {
     if (isSuccess) {
-      router.push(`/bounty-list?address=${repoAddress}`)
+      router.push(`/bounty-list?address=${repoAddress}`);
     }
-  }, [isSuccess])
+  }, [isSuccess]);
 
   useEffect(() => {
-    setDisabled(!form.formState.isValid)
+    setDisabled(!form.formState.isValid);
   }, [form.getValues()]);
 
   return (
-    <main className='background'
+    <main
+      className="background"
       style={{
         minHeight: `100vh`,
-      }}>
+      }}
+    >
       <Container>
-        <div className='flex flex-col'>
-          <div className='m-24'>
-            <div className='text-2xl mb-5 font-roboto-bold'>
-              New Bounty
-            </div>
-            <div className='flex flex-row issue-background'>
+        <div className="flex flex-col">
+          <div className="m-24">
+            <div className="text-2xl mb-5 font-roboto-bold">New Bounty</div>
+            <div className="flex flex-row issue-background">
               <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)} className="m-5 space-y-8 w-full">
+                <form
+                  onSubmit={form.handleSubmit(onSubmit)}
+                  className="m-5 space-y-8 w-full"
+                >
                   <FormField
                     control={form.control}
                     name="title"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className='text-1.5xl'>Title of the bounty</FormLabel>
+                        <FormLabel className="text-1.5xl">
+                          Title of the bounty
+                        </FormLabel>
                         <FormControl>
-                          <Input className="custom-input" placeholder="Type the bounty title here.." {...field} />
+                          <Input
+                            className="custom-input"
+                            placeholder="Type the bounty title here.."
+                            {...field}
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -120,9 +130,15 @@ export default function Bounty() {
                     name="description"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className='text-1.5xl'>Description of the bounty</FormLabel>
+                        <FormLabel className="text-1.5xl">
+                          Description of the bounty
+                        </FormLabel>
                         <FormControl>
-                          <Input className="custom-input" placeholder="Type description here.." {...field} />
+                          <Input
+                            className="custom-input"
+                            placeholder="Type description here.."
+                            {...field}
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -134,10 +150,16 @@ export default function Bounty() {
                       name="bounty"
                       render={({ field }) => (
                         <FormItem className="w-6/12 pr-10">
-                          <FormLabel className="text-1.5xl">Bounty Value</FormLabel>
+                          <FormLabel className="text-1.5xl">
+                            Bounty Value
+                          </FormLabel>
                           <FormControl>
-                            <div className='rt-input-input'>
-                              <Input className="custom-input" placeholder="Set a bounty" {...field} />
+                            <div className="rt-input-input">
+                              <Input
+                                className="custom-input"
+                                placeholder="Set a bounty"
+                                {...field}
+                              />
                             </div>
                           </FormControl>
                           <FormMessage />
@@ -169,7 +191,10 @@ export default function Bounty() {
                                 </Button>
                               </FormControl>
                             </PopoverTrigger>
-                            <PopoverContent className="w-auto p-0" align="start">
+                            <PopoverContent
+                              className="w-auto p-0"
+                              align="start"
+                            >
                               <Calendar
                                 mode="single"
                                 selected={field.value}
@@ -189,20 +214,36 @@ export default function Bounty() {
                     name="markdown"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className='text-1.5xl'>Markdown Editor</FormLabel>
+                        <FormLabel className="text-1.5xl">
+                          Markdown Editor
+                        </FormLabel>
                         <FormControl>
-                          <Textarea className="custom-input" placeholder="Write your markdown here.." {...field} />
+                          <Textarea
+                            className="custom-input"
+                            placeholder="Write your markdown here.."
+                            {...field}
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
                     )}
                   />
                   <div className="flex flex-row justify-center">
-                    <Button className="custom-cancel-btn mr-5" variant="outline" onClick={() => (router.push(`/bounty-list?address=${repoAddress}`))}>
+                    <Button
+                      className="custom-cancel-btn mr-5"
+                      variant="outline"
+                      onClick={() =>
+                        router.push(`/bounty-list?address=${repoAddress}`)
+                      }
+                    >
                       Cancel
                     </Button>
-                    <Button className="custom-send-btn ml-5" type="submit" disabled={isDisabled}>
-                      {isLoading ? 'Sending...' : 'Send'}
+                    <Button
+                      className="custom-send-btn ml-5"
+                      type="submit"
+                      disabled={isDisabled}
+                    >
+                      {isLoading ? "Sending..." : "Send"}
                     </Button>
                   </div>
                 </form>
@@ -211,6 +252,6 @@ export default function Bounty() {
           </div>
         </div>
       </Container>
-    </main >
+    </main>
   );
 }
