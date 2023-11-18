@@ -10,32 +10,42 @@ import {
     useWeb3ModalState,
 } from '@web3modal/wagmi/react'
 import { useAccount } from 'wagmi'
+import { useRouter, usePathname } from "next/navigation";
+
 
 const SubNav = () => {
     const { address, isConnected } = useAccount()
+    const pathname = usePathname()
+    const regex = /^(\/repos\/repo\/0x[0-9a-fA-F]+)/;
+    const match = pathname.match(regex);
+    let repo = "";
+    if (match) {
+        repo = match[1];
+    } else {
+        console.log("No match found");
+    }
 
+    const router = useRouter()
     const modal = useWeb3Modal()
     const state = useWeb3ModalState()
-
     const routes = [
         {
             href: "/home",
-            label: "Git Hunt",
+            label: "Odulgit",
         },
         {
             href: "/repos",
             label: "Repositories",
         },
         {
-            href: "/issues",
-            label: "Issues",
+            href: `${repo}/bounty`,
+            label: "Bounty",
         },
         {
-            href: "/reward-requests",
+            href: `${repo}/reward-requests`,
             label: "Reward Requests",
         },
     ];
-
     return (
         <header className="sm:flex sm:justify-between py-2.5 px-7 bg-gray-800 w-full">
             <Container>

@@ -3,7 +3,7 @@
 import * as React from "react"
 import Container from '@/components/ui/container';
 import { Button } from '@/components/ui/button'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import * as z from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
@@ -27,14 +27,17 @@ import {
 import { Input } from "@/components/ui/input"
 import { Checkbox } from '@/components/ui/checkbox'
 import CommContainer from "@/components/common-container";
+import { usePrepareContractWrite, useContractWrite, useWaitForTransaction } from 'wagmi'
+import { abi } from '@/service/Git/abi'
+import { useRouter } from 'next/navigation';
 
 export default function RR() {
   const formSchema = z.object({
-    title: z.string(),
-    description: z.string(),
-    from: z.string(),
-    to: z.boolean(),
-    linkIssue: z.string(),
+    title: z.string().refine((value) => value !== ''),
+    description: z.string().refine((value) => value !== ''),
+    from: z.string().refine((value) => value !== ''),
+    to: z.boolean().refine((value) => value !== false),
+    linkIssue: z.string().refine((value) => value !== ''),
   })
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -48,21 +51,52 @@ export default function RR() {
   })
 
   const branchList = [
-    { id: "main", name: "main" },
-    { id: "develop", name: "develop" },
+    { id: "1", name: "main" },
+    { id: "2", name: "develop" },
   ];
 
   const issueList = [
-    { id: "feat/deposit", name: "feat/deposit" },
-    { id: "feat/withdraw", name: "feat/withdraw" },
+    { id: "1", name: "feat/deposit" },
+    { id: "2", name: "feat/withdraw" },
   ];
 
   const [fromBranches, setFromBranches] = useState(branchList)
   const [issues, setIssues] = useState(issueList)
+  const [isDisabled, setDisabled] = useState(true)
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values)
+    console.log('Send Reward Request')
+    write?.()
   }
+
+  // Prepare the contract
+  const { config } = usePrepareContractWrite({
+    address: '0xFBA3912Ca04dd458c843e2EE08967fC04f3579c2',
+    abi: abi,
+    functionName: 'rewardRequest',
+    args: [
+      parseInt(form.getValues().from),
+      form.getValues().title
+    ],
+  })
+
+  const { data, write } = useContractWrite(config)
+  const { isLoading, isSuccess } = useWaitForTransaction({
+    hash: data?.hash,
+  })
+  const router = useRouter();
+
+  useEffect(() => {
+    if (isSuccess) {
+      router.push('/repos')
+    }
+  }, [isSuccess])
+
+  useEffect(() => {
+    setDisabled(!form.formState.isValid)
+  }, [form.getValues()]);
+
+
   return (
     <main className='background min-h-screen'>
       <Container>
@@ -147,8 +181,6 @@ export default function RR() {
                             </div>
                             <FormMessage />
                           </div>
-
-
                         </FormItem>
                       )}
                     />
@@ -177,7 +209,9 @@ export default function RR() {
                   />
                   <div className="flex flex-row justify-center">
                     <Button className="custom-cancel-btn mr-5" variant="outline">Cancel</Button>
-                    <Button className="custom-send-btn ml-5" type="submit">Send Pull Request</Button>
+                    <Button className="custom-send-btn ml-5" type="submit" disabled={isDisabled}>
+                      {isLoading ? 'Sending...' : 'Send Pull Request'}
+                    </Button>
                   </div>
                 </form>
               </Form>

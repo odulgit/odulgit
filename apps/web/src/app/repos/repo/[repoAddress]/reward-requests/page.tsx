@@ -1,14 +1,17 @@
 'use client'
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import CommContainer from '@/components/common-container';
 import Container from '@/components/ui/container';
 import { Button } from '@/components/ui/button';
 import * as React from "react"
-import { useRouter } from 'next/navigation';
+import { useRouter, useParams } from 'next/navigation';
+import { getRewardRequestList } from "@/service/Git/contract";
 
 
 export default function RRList() {
   const router = useRouter();
+  const params = useParams()
+  const [rewardList, setRewardList] = useState([])
 
   const mockRepoList = [
     {
@@ -90,16 +93,25 @@ export default function RRList() {
 
   const [repoList, setRepoList] = useState(mockRepoList)
 
+  useEffect(() => {
+    const fetchData = async () => {
+      const rewardRequest = await getRewardRequestList(params.repoAddress)
+      setRewardList(rewardList)
+    }
+    fetchData()
+  }, [])
+
   return (
     <main className='background min-h-screen'>
       <Container>
         <div className="flex flex-col">
           <div className='mt-24 mx-24'>
-            <div className='flex-1 text-2xl mb-6 font-roboto-bold'>
-              Reward Requests
-            </div>
-            <div className='flex flex-row items-center justify-end'>
-              <Button className='w-fit text-xl' onClick={() => (router.push('/reward-requests/create-request'))}>
+            <div className="flex flex-row justify-between">
+              <div className='flex-row text-2xl font-roboto-bold'>
+                Reward Requests
+              </div>
+              <Button className='custom-create-issue-btn'
+                onClick={() => (router.push('reward-requests/create-request'))}>
                 Create New Reward Request
               </Button>
             </div>

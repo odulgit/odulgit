@@ -1,6 +1,7 @@
 'use client'
 import Image from 'next/image'
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useRouter } from 'next/router';
 import CommContainer from '@/components/common-container';
 import Container from '@/components/ui/container';
 import { Button } from '@/components/ui/button';
@@ -8,13 +9,26 @@ import { Tree } from '@/components/folder-tree';
 import { File, Folder } from "lucide-react";
 import * as React from "react"
 import useResizeObserver from "use-resize-observer";
+import { FC } from 'react';
+import { getRepo } from '@/service/Git/contract'
 
-export default function Repo() {
+
+export default function Page({ params }: { params: { repoAddress: string } }) {
     const [repoIndex, setRepoIndex] = useState(1)
     const [repoOwner, setRepoOwner] = useState('yt-liyt')
     const [repoName, setRepoName] = useState('yt-liyt')
     const [issueAmount, setIssueAmount] = useState(204)
     const [bountyAmount, setBountyAmount] = useState(6800)
+    const [repo, setRepo] = useState()
+
+    useEffect(() => {
+        const fetchData = async () => {
+            const repo = await getRepo(params.repoAddress)
+            setRepo(repo)
+        }
+        fetchData()
+    }, [])
+
     const data = [
         {
             id: "1",
@@ -42,10 +56,11 @@ export default function Repo() {
                         <div className="flex flex-col space-y-5 mb-5">
                             <div className="flex flex-row space-x-3 items-center">
                                 <div className="text-purple-400 text-2xl font-roboto-bold">
-                                    Repository {repoIndex} - {repoOwner} /
+                                    Repository {repo?.owner} /
                                 </div>
                                 <div className="text-2xl font-roboto-bold">
                                     {repoName}
+                                    {repo?.name}
                                 </div>
                                 <div className="">
                                     Copy
