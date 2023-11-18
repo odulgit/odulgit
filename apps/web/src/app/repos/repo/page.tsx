@@ -72,7 +72,7 @@ export default function Repo() {
                                     <CommContainer>
                                         <div className="flex flex-col px-6 py-4">
                                             <div className="flex flex-row mb-3 space-x-2">
-                                                <img src="/Icon-repo.svg" alt="Repo Icon" />
+                                                <img src="./Icon-repo.svg" alt="Repo Icon" />
                                                 <div>
                                                     Repositories Address
                                                 </div>
@@ -95,7 +95,7 @@ export default function Repo() {
                                     <CommContainer>
                                         <div className="flex flex-col px-6 py-4">
                                             <div className="flex flex-row mb-3 space-x-2">
-                                                <img src="/Icon-issues.svg" alt="Issue Icon" />
+                                                <img src="./Icon-issues.svg" alt="Issue Icon" />
                                                 <div>
                                                     Issues Total Amount
                                                 </div>
@@ -104,7 +104,7 @@ export default function Repo() {
                                                 </div>
                                             </div>
                                             <div className="flex flex-row mb-3 space-x-2">
-                                                <img src="/Icon-value.svg" alt="Value Icon" />
+                                                <img src="./Icon-value.svg" alt="Value Icon" />
                                                 <div>
                                                     Bounty Total Amount
                                                 </div>
@@ -122,7 +122,7 @@ export default function Repo() {
                                     <CommContainer>
                                         <div className="flex flex-col px-6 py-4">
                                             <div className="flex flex-row mb-3 space-x-2">
-                                                <img src="/Icon-pull.svg" alt="Pull Icon" />
+                                                <img src="./Icon-pull.svg" alt="Pull Icon" />
                                                 <div>
                                                     Pull Requests
                                                 </div>

@@ -11,7 +11,7 @@ import {
 } from '@web3modal/wagmi/react'
 import { useAccount } from 'wagmi'
 
-const MainNav = () => {
+const SubNav = () => {
     const { address, isConnected } = useAccount()
 
     const modal = useWeb3Modal()
@@ -25,7 +25,15 @@ const MainNav = () => {
         {
             href: "/repos",
             label: "Repositories",
-        }
+        },
+        {
+            href: "/issues",
+            label: "Issues",
+        },
+        {
+            href: "/reward-requests",
+            label: "Reward Requests",
+        },
     ];
 
     return (
@@ -69,4 +77,4 @@ const MainNav = () => {
     );
 };
 
-export default MainNav;
+export default SubNav;

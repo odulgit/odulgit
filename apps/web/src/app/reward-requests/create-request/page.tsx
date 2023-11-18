@@ -28,7 +28,7 @@ import { Input } from "@/components/ui/input"
 import { Checkbox } from '@/components/ui/checkbox'
 import CommContainer from "@/components/common-container";
 
-export default function PR() {
+export default function RR() {
   const formSchema = z.object({
     title: z.string(),
     description: z.string(),
