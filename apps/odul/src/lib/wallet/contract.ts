@@ -29,6 +29,11 @@ export const getWallet = () => {
   }
 }
 
+export const onlyGetProvider = () => {
+  const wallet = new providers.JsonRpcProvider(getConfig().ethereum?.networkUrl as string)
+  return { wallet }
+}
+
 export const testWalletConnect = async () => {
   const { wallet, provider } = await getWeb3Wallet()
   const address = await wallet.getAddress()
@@ -47,9 +52,9 @@ export const getGitFactoryContract = async () => {
   return contract
 }
 
-export const getGitContract = async (address: string) => {
+export const getGitContract = async (address: string, get?: boolean) => {
   // const { wallet } = getWallet()
-  const { wallet } = await getWeb3Wallet()
+  const { wallet } = (get) ? onlyGetProvider() : await getWeb3Wallet()
   const contract = new Contract(
     address,
     gitContractABi.abi,

@@ -30,7 +30,6 @@ export const getRepoAddress = async (commitHashBytes: Uint8Array, name: string, 
   const factory = await getGitFactoryContract()
   const tx = await factory.getRepoAddress(commitHashBytes, name, cid, defaultBranch)
   const receipt = await tx.wait()
-  console.log(receipt)
   const event = factory.interface.parseLog(receipt.logs[0])
 
   const repo = event.args.repo
