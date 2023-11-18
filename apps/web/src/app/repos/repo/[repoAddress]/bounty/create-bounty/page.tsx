@@ -3,10 +3,10 @@
 import * as React from "react"
 import Container from '@/components/ui/container';
 import { Button } from '@/components/ui/button'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import * as z from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form" 
+import { useForm } from "react-hook-form"
 import {
   Form,
   FormControl,
@@ -27,15 +27,20 @@ import {
 
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
+import { useRouter } from 'next/navigation';
+import { usePrepareContractWrite, useContractWrite, useWaitForTransaction } from 'wagmi'
+import { abi } from '@/service/Git/abi'
 
-export default function Issues() {
-
+export default function Bounty() {
+  const router = useRouter()
   const [newDisscussion, setTotalBounty] = useState('Disscussion #')
+  const [isDisabled, setDisabled] = useState(true)
+
   const formSchema = z.object({
-    title: z.string(),
-    description: z.string(),
-    bounty: z.string(),
-    deadline: z.date(),
+    title: z.string().refine((value) => value !== ''),
+    description: z.string().refine((value) => value !== ''),
+    bounty: z.string().refine((value) => value !== ''),
+    deadline: z.any(),
     markdown: z.string(),
   })
   const form = useForm<z.infer<typeof formSchema>>({
@@ -47,10 +52,38 @@ export default function Issues() {
       markdown: '',
     },
   })
- 
+
   function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values)
+    console.log('Send Bounty Request')
+    write?.()
   }
+
+  // Prepare the contract
+  const { config } = usePrepareContractWrite({
+    address: '0xFBA3912Ca04dd458c843e2EE08967fC04f3579c2',
+    abi: abi,
+    functionName: 'createBounty',
+    args: [
+      form.getValues().title,
+      form.getValues().description
+    ],
+  })
+
+  const { data, write } = useContractWrite(config)
+  const { isLoading, isSuccess } = useWaitForTransaction({
+    hash: data?.hash,
+  })
+
+  useEffect(() => {
+    if (isSuccess) {
+      router.push('/issues')
+    }
+  }, [isSuccess])
+
+  useEffect(() => {
+    setDisabled(!form.formState.isValid)
+  }, [form.getValues()]);
+
   return (
     <main className='background'
       style={{
@@ -154,15 +187,20 @@ export default function Issues() {
                       <FormItem>
                         <FormLabel className='text-1.5xl'>Markdown Editor</FormLabel>
                         <FormControl>
-                          <Textarea className="custom-input" placeholder="Write your markdown here.." {...field}/>
+                          <Textarea className="custom-input" placeholder="Write your markdown here.." {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
                     )}
                   />
                   <div className="flex flex-row justify-center">
-                    <Button className="custom-cancel-btn mr-5" variant="outline">Cancel</Button>
-                    <Button className="custom-send-btn ml-5" type="submit">Send</Button>
+                    {/* <Button className="custom-cancel-btn mr-5" variant="outline">Cancel</Button> */}
+                    <Button className="custom-cancel-btn mr-5" variant="outline" onClick={() => (router.push('/issues'))}>
+                      Cancel
+                    </Button>
+                    <Button className="custom-send-btn ml-5" type="submit" disabled={isDisabled}>
+                      {isLoading ? 'Sending...' : 'Send'}
+                    </Button>
                   </div>
                 </form>
               </Form>
@@ -170,6 +208,6 @@ export default function Issues() {
           </div>
         </div>
       </Container>
-    </main>
+    </main >
   );
 }

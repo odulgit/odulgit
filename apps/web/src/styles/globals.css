@@ -174,3 +174,20 @@ header {
   color: #FFFFFF;
   border-radius: 20px;
 }
+
+.custom-create-issue-btn {
+  height: 32px;
+  width: 220px;
+  background-color: #119583;
+  color: #FFFFFF;
+  border-radius: 20px;
+}
+
+.custom-container {
+  border-color: #35323C;
+  border-radius: 20px;
+}
+
+.custom-container-hr {
+  border-color: #35323C;
+}
