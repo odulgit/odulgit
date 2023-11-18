@@ -19,15 +19,12 @@ const chainIds = {
   goerli: 5,
   sepolia: 11155111,
   hardhat: 31337,
-  quorum: 570,
   mainnet: 1,
-  avalanche: 43114,
-  bsc: 56,
-  "arbitrum-mainnet": 42161,
-  "polygon-mainnet": 137,
-  "optimism-goerli": 420,
-  "optimism-mainnet": 10,
-  "polygon-mumbai": 80001,
+  quorum: 570,
+  "scroll-sepolia": 534351, // scroll prize
+  "chiado-testnet": 10200, // gnosis prize
+  "stylus-testnet": 23011913, // arbitrum prize
+  "zkevm-testnet": 1442, // polygon prize
 }
 
 // Ensure that we have all the environment variables we need.
@@ -44,14 +41,20 @@ if (!infuraApiKey) {
 function getChainConfig (chain: keyof typeof chainIds): NetworkUserConfig {
   let jsonRpcUrl: string
   switch (chain) {
-    case "avalanche":
-      jsonRpcUrl = "https://api.avax.network/ext/bc/C/rpc"
-      break
-    case "optimism-goerli":
-      jsonRpcUrl = "https://goerli.optimism.io"
-      break
     case "quorum":
       jsonRpcUrl = process.env.NETWORK_URL || ""
+      break
+    case "scroll-sepolia":
+      jsonRpcUrl = "https://sepolia-rpc.scroll.io"
+      break
+    case "chiado-testnet":
+      jsonRpcUrl = "https://rpc.chiado.gnosis.gateway.fm/"
+      break
+    case "stylus-testnet":
+      jsonRpcUrl = "https://stylus-testnet.arbitrum.io/rpc"
+      break
+    case "zkevm-testnet":
+      jsonRpcUrl = "https://rpc.public.zkevm-test.net"
       break
     default:
       jsonRpcUrl = `https://${chain}.infura.io/v3/${infuraApiKey}`
@@ -72,17 +75,15 @@ const config: HardhatUserConfig = {
     local: {
       url: "http://127.0.0.1:8545",
     },
-    arbitrum: getChainConfig("arbitrum-mainnet"),
-    avalanche: getChainConfig("avalanche"),
-    bsc: getChainConfig("bsc"),
     goerli: getChainConfig("goerli"),
     sepolia: getChainConfig("sepolia"),
     mainnet: getChainConfig("mainnet"),
-    optimism: getChainConfig("optimism-mainnet"),
     quorum: getChainConfig("quorum"),
-    "optimism-goerli": getChainConfig("optimism-goerli"),
-    "polygon-mainnet": getChainConfig("polygon-mainnet"),
-    "polygon-mumbai": getChainConfig("polygon-mumbai"),
+    "scroll-sepolia": getChainConfig("scroll-sepolia"),
+    "chiado-testnet": getChainConfig("chiado-testnet"),
+    "stylus-testnet": getChainConfig("stylus-testnet"),
+    "zkevm-testnet": getChainConfig("zkevm-testnet"),
+
   },
   paths: {
     artifacts: "./artifacts",
@@ -112,16 +113,13 @@ const config: HardhatUserConfig = {
   },
   etherscan: {
     apiKey: {
-      arbitrumOne: process.env.ARBISCAN_API_KEY || "",
-      avalanche: process.env.SNOWTRACE_API_KEY || "",
-      bsc: process.env.BSCSCAN_API_KEY || "",
       goerli: process.env.ETHERSCAN_API_KEY || "",
       sepolia: process.env.ETHERSCAN_API_KEY || "",
       mainnet: process.env.ETHERSCAN_API_KEY || "",
-      optimisticEthereum: process.env.OPTIMISM_API_KEY || "",
-      polygon: process.env.POLYGONSCAN_API_KEY || "",
-      optimisticGoerli: process.env.OPTIMISM_API_KEY || "",
-      polygonMumbai: process.env.POLYGONSCAN_API_KEY || "",
+      scrollSepolia: process.env.SCROLLSCAN_API_KEY || "",
+      chiadoTestnet: process.env.CHIADOSCAN_API_KEY || "",
+      stylusTestnet: process.env.STYLUS_API_KEY || "",
+      zkevmTestnet: process.env.ZKEVM_API_KEY || "",
       quorum: "NO_API_KEY",
     },
     customChains: [{
@@ -130,6 +128,34 @@ const config: HardhatUserConfig = {
       urls: {
         apiURL: `${process.env.BLOCKSCOUT_URL}/api`,
         browserURL: process.env.BLOCKSCOUT_URL as string,
+      },
+    }, {
+      network: "scrollSepolia",
+      chainId: 534351,
+      urls: {
+        apiURL: "https://api-sepolia.scrollscan.com/api",
+        browserURL: "https://sepolia.scrollscan.com/",
+      },
+    }, {
+      network: "zkevmTestnet",
+      chainId: 1442,
+      urls: {
+        apiURL: "https://api-testnet-zkevm.polygonscan.com/api",
+        browserURL: "https://testnet-zkevm.polygonscan.com",
+      },
+    }, {
+      network: "chiadoTestnet",
+      chainId: 10200,
+      urls: {
+        apiURL: "https://gnosis-chiado.blockscout.com/api",
+        browserURL: "https://gnosis-chiado.blockscout.com",
+      },
+    }, {
+      network: "stylusTestnet",
+      chainId: 23011913,
+      urls: {
+        apiURL: "https://stylus-testnet-explorer.arbitrum.io/api",
+        browserURL: "https://stylus-testnet-explorer.arbitrum.io/",
       },
     }],
 
