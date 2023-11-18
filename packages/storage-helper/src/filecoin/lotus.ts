@@ -25,7 +25,7 @@ const example = async () => {
   await lotus(qID)
 }
 
-example().catch((error) => {
-  console.error(error)
-  process.exit(1)
-})
+// example().catch((error) => {
+//   console.error(error)
+//   process.exit(1)
+// })
