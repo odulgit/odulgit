@@ -2,8 +2,9 @@
   "name": "storage-helper",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "dist/src/index.js",
   "scripts": {
+    "build": "tsc",
     "ipfs": "sh ./scripts/ipfs/start.sh",
     "deploy:test": "hardhat deploy --network calibration",
     "deploy:file": "hardhat deploy:file --network calibration",

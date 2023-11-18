@@ -22,6 +22,11 @@ type ConfigType = DeepPartial<{
       host: string
     }
   }
+  filecoin: {
+    lightHouse: {
+      apiKey: string
+    }
+  }
   walletConnect: {
     projectId: string
     notifySecret: string
