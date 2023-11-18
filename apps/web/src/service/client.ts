@@ -71,8 +71,8 @@ export const scrollSepoliaClient: any = createPublicClient({
 export const publicClients: any = {
   'Goerli': goerliClient,
   'Sepolia':sepoliaClient,
+  'Scroll Sepolia': scrollSepoliaClient,
   'Gnosis Chiado': gnosisChiadoClient,
-  'Arbitrum Sepolia':arbSepoliaClient,
   'Polygon zkEVM Testnet': zkEvmTestnetClient,
-  'Scroll Sepolia': scrollSepoliaClient
+  'Stylus Testnet':arbSepoliaClient,
 }

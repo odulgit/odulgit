@@ -6,8 +6,12 @@ import { getRepo, RepoData } from '@/service/Git/contract';
 import { publicClients } from '@/service/client'
 
 export const gitFactoryAddress: any = {
-  'Goerli': process.env.NEXT_PUBLIC_GIT_FACTORY_GOERLI_CONTRACT,
-  'Sepolia': process.env.NEXT_PUBLIC_GIT_FACTORY_SEPOLIA_CONTRACT
+  'Goerli': process.env.NEXT_PUBLIC_GIT_FACTORY_SEPOLIA_CONTRACT,
+  'Sepolia': process.env.NEXT_PUBLIC_GIT_FACTORY_SEPOLIA_CONTRACT,
+  'Scroll Sepolia' : process.env.NEXT_PUBLIC_GIT_FACTORY_SEPOLIA_CONTRACT,
+  'Gnosis Chiado':process.env.NEXT_PUBLIC_GIT_FACTORY_SEPOLIA_CONTRACT,
+  'Polygon zkEVM Testnet':process.env.NEXT_PUBLIC_GIT_FACTORY_SEPOLIA_CONTRACT,
+  'Stylus Testnet':process.env.NEXT_PUBLIC_GIT_FACTORY_SEPOLIA_CONTRACT,
 }
 
 export const getRepoCount = async () => {
