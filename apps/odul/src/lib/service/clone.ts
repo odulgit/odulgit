@@ -1,24 +1,32 @@
 import fs from "node:fs"
-import { downloadDir } from "../util/ipfs"
 import { reset } from "../git/reset"
+import { fetch } from "./fetch"
+import { setRepoAddress } from "../git/remote"
 
 export const clone = async (dto: {
   repository: string
   directory?: string
 }) => {
-  // TODO: get repo and cid from contract
+  // TODO: get repo and branch from contract
   const repo = dto.repository
-  const cid = "QmT5SVrnKPDe1sUcZP7nSm669q3mvuebfTxbTNYgLpnyLa"
 
   const dir = dto.directory || repo
+  const gitDir = `${dir}/.git`
 
-  if (fs.existsSync(dir)) {
+  if (fs.existsSync(gitDir)) {
     throw new Error("direction is existed")
   }
 
-  fs.mkdirSync(`${dir}/.git`, { recursive: true })
-
-  await downloadDir(cid, `${dir}/.git`)
-
+  const { head, branch } = await fetch({
+    repository: dto.repository,
+    dir,
+  })
+  fs.mkdirSync(`${gitDir}/refs/heads`, { recursive: true })
+  fs.writeFileSync(`${gitDir}/refs/heads/${branch}`, `${head}\n`)
+  fs.writeFileSync(`${gitDir}/HEAD`, `ref: refs/heads/${branch}\n`)
   await reset("hard", "HEAD", { dir: `${dir}/.git`, workTree: dir })
+
+  await setRepoAddress(dto.repository, { dir: gitDir, workTree: dir })
+
+  return { head, branch }
 }

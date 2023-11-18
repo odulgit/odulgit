@@ -1,19 +1,20 @@
 import { runCommand } from "../util/async-run-command"
 import { GitOption, getEnv } from "./options"
 
-export const reset = async (
-  type: "soft" | "mixed" | "hard",
-  commit: string,
+export const remoteAdd = async (
+  name: string,
+  url: string,
   options?: GitOption,
 ) => {
   const result = await runCommand(
     "git",
     [
-      "reset",
-      `--${type}`,
-      commit,
+      "remote",
+      "add",
+      name,
+      url,
     ],
-    getEnv(options),
+    options && getEnv(options),
   )
   return result
 }

@@ -5,15 +5,17 @@ export interface GitOption {
   workTree?: string
 }
 
-export const getEnv = (option?: GitOption): Parameters<typeof runCommand>[2] => {
+export const getEnv = (option?: GitOption): Parameters<typeof runCommand>[2] | undefined => {
+  if (option === undefined) return undefined
   const env: (typeof process.env) = {}
-
-  if (option?.dir) {
-    env.GIT_DIR = option.dir
-  }
 
   if (option?.workTree) {
     env.GIT_WORK_TREE = option.workTree
+    env.GIT_DIR = `${option.workTree}/.git`
+  }
+
+  if (option?.dir) {
+    env.GIT_DIR = option.dir
   }
 
   return env

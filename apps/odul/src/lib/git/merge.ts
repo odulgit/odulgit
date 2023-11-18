@@ -1,16 +1,18 @@
 import { runCommand } from "../util/async-run-command"
 import { GitOption, getEnv } from "./options"
 
-export const reset = async (
-  type: "soft" | "mixed" | "hard",
+export const merge = async (
   commit: string,
+  message: string,
   options?: GitOption,
 ) => {
   const result = await runCommand(
     "git",
     [
-      "reset",
-      `--${type}`,
+      "merge",
+      "--no-ff",
+      "-m",
+      message,
       commit,
     ],
     getEnv(options),
