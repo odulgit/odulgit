@@ -27,12 +27,15 @@ import {
 
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { usePrepareContractWrite, useContractWrite, useWaitForTransaction } from 'wagmi'
 import { abi } from '@/service/Git/abi'
 
 export default function Bounty() {
   const router = useRouter()
+  const searchParams = useSearchParams()
+  const repoAddress = searchParams.get('address') ?? ''
+
   const [newDisscussion, setTotalBounty] = useState('Disscussion #')
   const [isDisabled, setDisabled] = useState(true)
 

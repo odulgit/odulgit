@@ -11,9 +11,9 @@ import { BountyData, getBountyList } from '@/service/Git/contract'
 export default function BountyList() {
   const router = useRouter();
   const [bountyList, setBountyList] = useState<BountyData[]>([])
-  const params = useParams()
 
   const searchParams = useSearchParams()
+  const repoAddress = searchParams.get('address') ?? ''
 
 
   const mockIssueList = [
@@ -101,7 +101,6 @@ export default function BountyList() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const repoAddress = searchParams.get('address') ?? ''
       const bounties: BountyData[] = await getBountyList(repoAddress)
       setBountyList(bounties)
     }
@@ -116,7 +115,7 @@ export default function BountyList() {
               <div className="flex-row text-2xl font-roboto-bold">Bounties</div>
               <Button
                 className="custom-create-issue-btn"
-                onClick={() => router.push(`bounty/create-bounty`)}
+                onClick={() => router.push(`bounty-list/create-bounty?address=${repoAddress}`)}
               >
                 Create New Bounty
               </Button>

@@ -13,6 +13,7 @@ export default function RRList() {
   const params = useParams()
   const [rewardList, setRewardList] = useState([])
   const searchParams = useSearchParams()
+  const repoAddress = searchParams.get('address') ?? ''
 
   const mockRepoList = [
     {
@@ -96,7 +97,6 @@ export default function RRList() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const repoAddress = searchParams.get('address') ?? ''
       const rewardRequest = await getRewardRequestList(repoAddress)
       setRewardList(rewardList)
     }
@@ -113,7 +113,7 @@ export default function RRList() {
                 Reward Requests
               </div>
               <Button className='custom-create-issue-btn'
-                onClick={() => (router.push('reward-requests/create-request'))}>
+                onClick={() => (router.push(`reward-request-list/create-request?address=${repoAddress}`))}>
                 Create New Reward Request
               </Button>
             </div>

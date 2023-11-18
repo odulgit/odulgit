@@ -29,9 +29,11 @@ import { Checkbox } from '@/components/ui/checkbox'
 import CommContainer from "@/components/common-container";
 import { usePrepareContractWrite, useContractWrite, useWaitForTransaction } from 'wagmi'
 import { abi } from '@/service/Git/abi'
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 export default function RR() {
+  const searchParams = useSearchParams()
+  const repoAddress = searchParams.get('address') ?? ''
   const formSchema = z.object({
     title: z.string().refine((value) => value !== ''),
     description: z.string().refine((value) => value !== ''),
