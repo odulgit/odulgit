@@ -104,6 +104,28 @@ export const getBountyList = async (repoAddress:string) => {
     return bountyList
 }
 
+export const getBounty = async (repoAddress:string, bountyId : number) => {
+  const { chain } = getNetwork()
+  const publicClient = publicClients[chain!.name]
+
+  const bountyInfo = await publicClient.readContract({
+    address: repoAddress,
+    abi: gitAbi,
+    functionName: 'getBounty',
+    args: [bountyId],
+  })
+
+  const bounty:BountyData = {
+    id: bountyId,
+    address: repoAddress,
+    title: bountyInfo[0].title,
+    description: bountyInfo[0].description,
+    openStatus: bountyInfo[0].openStatus,
+    bountyAmount: Number(bountyInfo[1]),
+  }
+  return bounty
+}
+
 export const getRewardRequestList = async (repoAddress:string) => {
     const { chain } = getNetwork()
     const requestList: RRData[] = []
