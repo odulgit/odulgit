@@ -45,7 +45,7 @@ export const pushToContract = async (repoAddr: string, commits: Commit[], cid: s
     const tx = await repo.push(commit, cid)
     const receipt = await tx.wait()
     const event = repo.interface.parseLog(receipt.logs[receipt.logs.length - 1])
-    return `${event.args.contributer}/${event.args.contributeID}`
+    return `${event.args.contributor}/${event.args.contributeID}`
   } catch (e: any) {
     if (e?.error?.reason) {
       throw new Error(e?.error?.reason)
@@ -54,11 +54,11 @@ export const pushToContract = async (repoAddr: string, commits: Commit[], cid: s
   }
 }
 
-export const mergeToContract = async (repoAddr: string, commit: Commit, contributer: string, contributeId: string, cid: string) => {
+export const mergeToContract = async (repoAddr: string, commit: Commit, contributor: string, contributeId: string, cid: string) => {
   const repo = await getGitContract(repoAddr)
 
   try {
-    await repo.merge(catCommitPayload(commit), contributer, contributeId, cid)
+    await repo.merge(catCommitPayload(commit), contributor, contributeId, cid)
   } catch (e: any) {
     if (e?.error?.reason) {
       throw new Error(e?.error?.reason)

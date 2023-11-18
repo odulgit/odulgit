@@ -32,7 +32,7 @@ export const fetch = async (dto: {
     fs.writeFileSync(`${workTree}/.git/refs/remotes/odul/HEAD`, `${head}\n`)
   } else {
     const [address, index] = dto.branch.split("/")
-    const { cid } = (await gitContract.contributer(address, parseInt(index)))
+    const { cid } = (await gitContract.contributor(address, parseInt(index)))
     if (cid === "") {
       throw new Error("Branch not exist")
     }

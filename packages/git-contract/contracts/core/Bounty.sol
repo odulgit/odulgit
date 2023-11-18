@@ -10,7 +10,7 @@ contract Bounty {
     // === event ===
     event BountyGiven(
         uint256 bountyId,
-        address indexed contributer,
+        address indexed contributor,
         uint256 amount
     );
     event createBountyEvent(
@@ -50,19 +50,19 @@ contract Bounty {
         );
     }
 
-    function giveBounty(uint256 bountyId, address contributer) internal {
+    function giveBounty(uint256 bountyId, address contributor) internal {
         require(bountyContent[bountyId].openStatus == 1, "Bounty is closed");
-        require(contributer != address(0), "Contributer is the zero address");
+        require(contributor != address(0), "contributor is the zero address");
 
         uint256 amount = bountyAmount[bountyId];
         require(amount > 0, "Bounty amount is zero");
 
         bountyContent[bountyId].openStatus = 0;
         bountyAmount[bountyId] = 0;
-        payable(contributer).transfer(amount);
+        payable(contributor).transfer(amount);
         bountyTotalAmount -= amount;
 
-        emit BountyGiven(bountyId, contributer, amount);
+        emit BountyGiven(bountyId, contributor, amount);
     }
 
     function closeBounty(uint256 bountyId) public {
