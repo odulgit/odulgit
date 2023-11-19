@@ -10,6 +10,7 @@
 
 ### Demo Page
 - WebPage: [odulgit.net/odulgit/](https://odulgit.net/odulgit/)
+- tweet: https://twitter.com/kidneyweakx/status/1726114026768540040
 - Video: [https://youtu.be/](https://youtu.be/)
 - Contract Address:
   - Sepolia Address: https://sepolia.etherscan.io/address/0xC359132E29bf040aA546b4de51B06D6e4B772628#code
