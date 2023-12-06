@@ -55,9 +55,9 @@ jobs:
         run: pnpm run build --filter web
 
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v2
         with:
-          path: apps/web/out
+          path: "apps/web/out"
 
   # Deploy to GitHub Pages
   deploy:
