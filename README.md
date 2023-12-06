@@ -5,7 +5,9 @@
 
 <img src="./apps/web/public/Odulgit-Logo.png" width="50%" height="50%"></img>
 
-[![License: LGPL v3](https://img.shields.io/badge/License-LGPL%20v3-blue.svg)](./LICENSE) [![Odulgit Frontend](https://github.com/odulgit/odulgit/actions/workflows/ghpages.yml/badge.svg)](https://github.com/odulgit/odulgit/actions/workflows/ghpages.yml)
+[![License: LGPL v3](https://img.shields.io/npm/l/odul
+)](./LICENSE) [![NPM Version](https://img.shields.io/npm/v/odul
+)](https://www.npmjs.com/package/odul) [![Odulgit Frontend](https://github.com/odulgit/odulgit/actions/workflows/ghpages.yml/badge.svg)](https://github.com/odulgit/odulgit/actions/workflows/ghpages.yml)
 </div>
 
 ### Demo Page
