@@ -25,9 +25,9 @@ jobs:
       - name: Install dependencies
         run: pnpm install
       - run: pnpm build
-      - run: |
-          cd ./apps/odul
-          npm publish --access public
+
+      - name: Publish Packages
+        run: npm publish --access public
+        working-directory: ./apps/odul
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-  
