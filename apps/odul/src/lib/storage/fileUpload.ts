@@ -1,6 +1,4 @@
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-import { uploadData } from "storage-helper"
+import { uploadData } from "@hollowleaf/odul-storage"
 import { getConfig } from "../service/config"
 
 const apiKey: string | undefined = getConfig().filecoin?.lightHouse?.apiKey
